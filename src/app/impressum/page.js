@@ -15,7 +15,7 @@ export default function Impressum() {
         <h2 style={{ ...h, fontSize: "20px" }}>Kontakt</h2>
         <p>E-Mail: info@virtue-compliance.ch</p>
         <h2 style={{ ...h, fontSize: "20px" }}>Vertretungsberechtigte Person(en)</h2>
-        <p>Denis Scheller, Geschäftsführer</p>
+        <p>Elena Scheller, Geschäftsführer</p>
         <h2 style={{ ...h, fontSize: "20px" }}>Haftungsausschluss</h2>
         <p>Die Inhalte dieser Website werden mit grösstmöglicher Sorgfalt erstellt. Die Virtue Compliance GmbH übernimmt jedoch keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der bereitgestellten Inhalte.</p>
         <div style={{ marginTop: "40px", paddingTop: "20px", borderTop: "1px solid #E0DAD4" }}>
