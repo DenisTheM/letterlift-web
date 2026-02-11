@@ -103,9 +103,8 @@ export default function App() {
   const [editing,setEditing]=useState(false);
   const [prevTxt,setPrevTxt]=useState("");
   const [loading,setLoading]=useState(false);
-  const [heroOcc,setHeroOcc]=useState(0);
   const [d,setD]=useState({
-    bookingType:null,recipientName:"",nickname:"",relationship:"",language:"de",
+    bookingType:null,recipientName:"",nickname:"",gender:"",relationship:"",language:"de",
     occasion:null,contextText:"",goal:"",hobbies:"",music:"",humor:[],
     strengths:"",importantPeople:"",noGo:"",memories:"",style:[],
     customStyleDesc:"",senderName:"",senderMessage:"",
@@ -144,6 +143,7 @@ export default function App() {
     case"recipient":return(<div><SH t={isSelf?"Über dich":"Wem sollen die Briefe Kraft geben?"} s={isSelf?"Damit die Briefe sich anfühlen, als kämen sie von jemandem, der dich kennt.":"Je mehr wir erfahren, desto persönlicher."}/>
       <div style={{display:"flex",flexDirection:"column",gap:"18px"}}>
         <div><label style={L}>Vorname</label><input style={I} placeholder={isSelf?"Dein Vorname":"z.B. Sarah"} value={d.recipientName} onChange={e=>u("recipientName",e.target.value)} onFocus={fc} onBlur={bl}/></div>
+        <div><label style={L}>Geschlecht <span style={{fontSize:"11px",color:"#B0A9A3",fontWeight:400}}>(für korrekte Ansprache)</span></label><div style={{display:"flex",flexWrap:"wrap"}}>{[["f","♀ Weiblich"],["m","♂ Männlich"],["x","✦ Divers"]].map(([k,l])=><span key={k} style={ch(d.gender===k)} onClick={()=>u("gender",k)}>{l}</span>)}</div></div>
         <div><label style={L}>Spitzname <span style={O}>optional</span></label><input style={I} placeholder="z.B. Sari" value={d.nickname} onChange={e=>u("nickname",e.target.value)} onFocus={fc} onBlur={bl}/></div>
         {!isSelf&&<div><label style={L}>Beziehung</label><div style={{display:"flex",flexWrap:"wrap"}}>{REL.map(r=><span key={r} style={ch(d.relationship===r)} onClick={()=>u("relationship",r)}>{r}</span>)}</div></div>}
         <div><label style={L}>Sprache</label><div style={{display:"flex",flexWrap:"wrap"}}>{[["de","🇨🇭 Deutsch"],["en","🇬🇧 English"],["fr","🇫🇷 Français"],["it","🇮🇹 Italiano"]].map(([k,l])=><span key={k} style={ch(d.language===k)} onClick={()=>u("language",k)}>{l}</span>)}</div></div>
@@ -259,7 +259,7 @@ export default function App() {
 function SH({t,s}){return(<div style={{marginBottom:"22px"}}><h2 style={{fontSize:"22px",fontWeight:400,margin:"0 0 6px",fontFamily:"'Lora',Georgia,serif",lineHeight:1.3}}>{t}</h2><p style={{fontSize:"13.5px",color:"#8A7F76",fontFamily:"'DM Sans',sans-serif",margin:0,lineHeight:1.6}}>{s}</p></div>);}
 
 function Landing({go}){
-  const[hR,hV]=useInView(0.1);const[wR,wV]=useInView();const[tR,tV]=useInView();const[fR,fV]=useInView();const[oF,setOF]=useState(null);
+  const[hR,hV]=useInView(0.1);const[wR,wV]=useInView();const[tR,tV]=useInView();const[fR,fV]=useInView();const[oF,setOF]=useState(null);const[heroOcc,setHeroOcc]=useState(0);
   const sa=v=>({opacity:v?1:0,transform:v?"translateY(0)":"translateY(30px)",transition:"all 0.8s cubic-bezier(0.16,1,0.3,1)"});
   return(<div style={{minHeight:"100vh",background:"#FBF8F5",fontFamily:"'Lora',Georgia,serif",color:"#2C2C2C",overflowX:"hidden"}}>
     <nav style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"20px 6%",maxWidth:"1200px",margin:"0 auto"}}><div style={{display:"flex",alignItems:"center",gap:"12px"}}><span style={{fontSize:"20px",fontWeight:700,fontFamily:"'DM Sans',sans-serif",color:"#3D5A4C"}}>✉️ LetterLift</span><span style={{fontSize:"11px",fontFamily:"'DM Sans',sans-serif",fontWeight:600,color:"#5B7B6A",background:"#EEF4F0",padding:"4px 10px",borderRadius:"100px",letterSpacing:"0.05em"}}>BETA</span></div><button onClick={()=>go("gift")} style={{background:"#3D5A4C",color:"#fff",border:"none",borderRadius:"10px",padding:"10px 22px",fontSize:"14px",fontFamily:"'DM Sans',sans-serif",fontWeight:600,cursor:"pointer"}}>Jetzt starten</button></nav>

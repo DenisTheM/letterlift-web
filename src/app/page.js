@@ -1,7 +1,6 @@
+// src/app/page.js
 "use client";
-import dynamic from "next/dynamic";
-
-const LetterLift = dynamic(() => import("../components/LetterLift"), { ssr: false });
+import LetterLift from "../components/LetterLift";
 
 export default function Home() {
   return <LetterLift />;
