@@ -31,7 +31,7 @@ const STY = [
 ];
 const PKG=[{id:"impuls",name:"Impuls",letters:5,price:34.9,pl:"6.98"},{id:"classic",name:"Classic",letters:10,price:59.9,pl:"5.99",pop:true},{id:"journey",name:"Journey",letters:15,price:79.9,pl:"5.33"}];
 const FREQ=[{id:"daily",label:"Täglich",desc:"Intensive Journey",icon:"📬"},{id:"every3",label:"Alle 3 Tage",desc:"Raum zum Nachdenken",icon:"📅"},{id:"weekly",label:"Wöchentlich",desc:"Längere Begleitung",icon:"🗓️"}];
-const PAP=[{id:"standard",label:"Standard",desc:"120g-Papier, weisses Kuvert",price:0,icon:"📄"},{id:"premium",label:"Premium-Papier",desc:"200g, crèmefarbenes Kuvert",price:29.9,icon:"📜"},{id:"handwritten",label:"Handschrift-Edition",desc:"Premium-Papier + Handschrift-Font",price:24.9,icon:"✒️"}];
+const PAP=[{id:"standard",label:"Standard",desc:"120g-Papier, weisses Kuvert",price:0,icon:"📄"},{id:"premium",label:"Premium-Papier",desc:"200g, crèmefarbenes Kuvert",price:9.9,icon:"📜"},{id:"handwritten",label:"Handschrift-Edition",desc:"Premium-Papier + Handschrift-Font",price:19.9,icon:"✒️"}];
 const REL=["Beste/r Freund/in","Partner/in","Mutter","Vater","Schwester","Bruder","Tochter","Sohn","Kolleg/in","Andere"];
 const PERS=[
   {id:"bestfriend",emoji:"👋",label:"Dein bester Freund / beste Freundin",desc:"Jemand, der dich seit Jahren kennt",ph:"z.B. Mein bester Freund Tom"},
@@ -293,8 +293,8 @@ function Landing({go}){
       </div>)}</div>
       <div style={{marginTop:"32px"}}><p style={{fontSize:"14px",fontFamily:"'DM Sans',sans-serif",fontWeight:600,color:"#2C2C2C",textAlign:"center",margin:"0 0 16px"}}>Mach es besonders – Premium-Upgrades</p>
         <div style={{display:"flex",gap:"16px",justifyContent:"center",flexWrap:"wrap"}}>{[
-          {icon:"📜",name:"Premium-Papier",desc:"Schweres, hochwertiges Premiumpapier",price:"+CHF 29.90"},
-          {icon:"✒️",name:"Handschrift-Edition",desc:"Premium-Papier + eleganter Handschrift-Font",price:"+CHF 24.90"},
+          {icon:"📜",name:"Premium-Papier",desc:"Schweres, hochwertiges Premiumpapier",price:"+CHF 9.90"},
+          {icon:"✒️",name:"Handschrift-Edition",desc:"Premium-Papier + eleganter Handschrift-Font",price:"+CHF 19.90"},
           {icon:"📸",name:"Foto-Edition",desc:"Deine Fotos passend in die Briefe integriert",price:"+CHF 19.90",soon:true}
         ].map((u,i)=><div key={i} style={{background:"#fff",border:"1.5px solid #E0DAD4",borderRadius:"14px",padding:"18px 22px",display:"flex",alignItems:"center",gap:"14px",minWidth:"260px",flex:"1",maxWidth:"360px",position:"relative",opacity:u.soon?0.7:1}}><div style={{fontSize:"28px"}}>{u.icon}</div><div style={{flex:1}}><div style={{fontSize:"14px",fontWeight:600,fontFamily:"'DM Sans',sans-serif"}}>{u.name}{u.soon&&<span style={{marginLeft:"8px",fontSize:"10px",fontWeight:600,fontFamily:"'DM Sans',sans-serif",color:"#fff",background:"#B0A9A3",borderRadius:"6px",padding:"2px 8px",verticalAlign:"middle"}}>COMING SOON</span>}</div><div style={{fontSize:"12px",fontFamily:"'DM Sans',sans-serif",color:"#8A8480",marginTop:"2px"}}>{u.desc}</div></div><div style={{fontSize:"13px",fontFamily:"'DM Sans',sans-serif",fontWeight:600,color:u.soon?"#B0A9A3":"#3D5A4C",whiteSpace:"nowrap"}}>{u.price}</div></div>)}</div></div>
       <p style={{fontSize:"13px",fontFamily:"'DM Sans',sans-serif",color:"#B0A9A3",textAlign:"center",marginTop:"20px"}}>Einmalzahlung · Kein Abo · Upgrades im Bestellprozess wählbar</p>
