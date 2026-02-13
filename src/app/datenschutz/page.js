@@ -38,6 +38,9 @@ export default function Datenschutz() {
         <p><strong>Supabase Inc.</strong> (USA/EU) – Datenbank-Hosting. Server-Standort: Frankfurt (EU).</p>
         <p><strong>Vercel Inc.</strong> (USA) – Website-Hosting.</p>
         <p><strong>Anthropic PBC</strong> (USA) – KI-Textgenerierung via API.</p>
+        <p><strong>Google LLC</strong> (USA) – Webanalyse via Google Analytics. Wird nur mit Ihrer ausdrücklichen Einwilligung aktiviert (Cookie-Banner). Google ist unter dem EU-US Data Privacy Framework zertifiziert. Weitere Informationen: <a href="https://policies.google.com/privacy" style={{ color: "#5B7B6A" }}>Google Datenschutzerklärung</a>.</p>
+        <p><strong>Resend Inc.</strong> (USA) – E-Mail-Versand für Bestellbestätigungen und Brieffreigaben.</p>
+        <p><strong>Geoapify GmbH</strong> (Deutschland) – Adress-Autocomplete im Bestellprozess. Es werden eingegebene Adressdaten zur Vervollständigung übermittelt.</p>
 
         <h2 style={{ ...h, fontSize: "20px" }}>6. Datenspeicherung und Löschung</h2>
         <p>Personalisierungsdaten werden nach Abschluss der Briefserie (letzter Brief versendet) für maximal 90 Tage aufbewahrt, um eventuelle Kundenanfragen bearbeiten zu können. Danach werden sie unwiderruflich gelöscht.</p>
@@ -49,8 +52,10 @@ export default function Datenschutz() {
         <p>Schweizer Datenschutzrecht (DSG): Sie können sich an den Eidgenössischen Datenschutz- und Öffentlichkeitsbeauftragten (EDÖB) wenden.</p>
         <p>EU-Datenschutzrecht (DSGVO): Sofern die DSGVO anwendbar ist, haben Sie zusätzlich das Recht auf Beschwerde bei einer EU-Aufsichtsbehörde.</p>
 
-        <h2 style={{ ...h, fontSize: "20px" }}>8. Cookies</h2>
-        <p>LetterLift verwendet keine Marketing- oder Tracking-Cookies. Es werden ausschliesslich technisch notwendige Cookies für die Funktion der Website eingesetzt.</p>
+        <h2 style={{ ...h, fontSize: "20px" }}>8. Cookies und Webanalyse</h2>
+        <p><strong>Technisch notwendige Cookies:</strong> LetterLift verwendet ein Cookie (<code style={{ background: "#F0EDE8", padding: "2px 6px", borderRadius: "4px", fontSize: "13px" }}>ll_consent</code>), um Ihre Cookie-Einwilligung zu speichern. Dieses Cookie ist für den Betrieb der Website erforderlich und wird ohne Einwilligung gesetzt.</p>
+        <p><strong>Google Analytics:</strong> Wir verwenden Google Analytics (Google LLC, USA) zur Analyse der Websitenutzung. Google Analytics wird <strong>erst nach Ihrer ausdrücklichen Einwilligung</strong> über den Cookie-Banner aktiviert. Dabei werden Daten wie Seitenaufrufe, Verweildauer und ungefährer Standort (auf Stadtebene) erhoben. Die IP-Adresse wird anonymisiert. Sie können Ihre Einwilligung jederzeit widerrufen, indem Sie Ihre Browser-Cookies löschen. Beim nächsten Besuch wird der Cookie-Banner erneut angezeigt.</p>
+        <p>Weitere Informationen zur Datenverarbeitung durch Google: <a href="https://policies.google.com/privacy" style={{ color: "#5B7B6A" }}>Google Datenschutzerklärung</a>. Sie können die Erfassung durch Google Analytics auch mit dem <a href="https://tools.google.com/dlpage/gaoptout" style={{ color: "#5B7B6A" }}>Browser-Add-on von Google</a> verhindern.</p>
 
         <h2 style={{ ...h, fontSize: "20px" }}>9. Änderungen</h2>
         <p>Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen. Die aktuelle Version ist stets auf dieser Seite einsehbar.</p>
