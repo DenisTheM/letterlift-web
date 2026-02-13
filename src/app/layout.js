@@ -1,8 +1,8 @@
 // src/app/layout.js
 export const metadata = {
   title: "LetterLift – Persönliche Briefserien, die berühren",
-  description: "Überrasche jemanden mit handgeschriebenen Briefen voller persönlicher Erinnerungen. KI-unterstützt, von dir inspiriert. Als Geschenk oder für dich selbst. Ab CHF 34.90.",
-  keywords: ["Briefe verschenken", "persönliche Geschenkidee", "Briefserie", "emotionales Geschenk", "KI Briefe", "handgeschriebene Briefe", "Geschenk Schweiz", "LetterLift"],
+  description: "Persönliche Briefserien für die Menschen, die dir am Herzen liegen. KI-unterstützt, von dir inspiriert. Als Geschenk oder für dich selbst. Ab CHF 34.90.",
+  keywords: ["Briefe verschenken", "persönliche Geschenkidee", "Briefserie", "emotionales Geschenk", "KI Briefe", "persönliche Briefe", "Geschenk Schweiz", "LetterLift"],
   authors: [{ name: "LetterLift" }],
   creator: "LetterLift",
   metadataBase: new URL("https://letterlift.ch"),
@@ -57,6 +57,8 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#3D5A4C" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-M7ZK9G336X" />
+        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-M7ZK9G336X');` }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
