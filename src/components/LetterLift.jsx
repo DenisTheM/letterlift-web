@@ -139,10 +139,11 @@ function assessQuality(d) {
   chk(d.humor?.length>0?"set":null,1,false,"Humor-Typ");
   const r=mx>0?s/mx:0;let lv,co,em,msg;
   const pk=d.package;const briefCount=pk==="journey"?15:pk==="classic"?10:pk==="impuls"?5:1;
-  if(r<0.3){lv="Unzureichend";co="#E53E3E";em="🔴";msg="Zu wenig Material.";}
-  else if(r<0.5){lv="Basis";co="#DD6B20";em="🟠";msg=briefCount>5?`Für ${briefCount} Briefe fehlen noch Erinnerungen.`:"Grundlage da – mehr Details machen es unvergesslich.";}
-  else if(r<0.7){lv="Gut";co="#D69E2E";em="🟡";msg=goodMems<2?"Gute Basis! Noch eine Erinnerung für richtig persönliche Briefe.":"Gute Basis! Noch etwas mehr Detail macht es perfekt.";}
-  else if(r<0.85){lv="Sehr gut";co="#38A169";em="🟢";msg=`Stark! Genug Material für ${Math.min(goodMems*3,briefCount)} persönliche Briefe.`;}
+  if(r<0.3){lv="Noch zu wenig";co="#E53E3E";em="🔴";msg="Bitte ergänze mehr Details für persönliche Briefe.";}
+  else if(r<0.5){lv="Grundlage";co="#DD6B20";em="🟠";msg=briefCount>5?`Für ${briefCount} Briefe brauchen wir noch mehr Erinnerungen.`:"Gute Basis – mehr Details machen die Briefe unvergesslich.";}
+  else if(r<0.65){lv="Guter Start";co="#D69E2E";em="🟡";msg=goodMems<2?"Noch eine Erinnerung macht den Unterschied.":"Solide Grundlage – noch etwas mehr Detail macht es richtig persönlich.";}
+  else if(r<0.8){lv="Gut";co="#38A169";em="🟢";msg=`Gutes Material für ${Math.min(goodMems*3,briefCount)} persönliche Briefe.`;}
+  else if(r<0.9){lv="Sehr gut";co="#276749";em="🟢";msg="Starkes Material für richtig persönliche Briefe.";}
   else{lv="Exzellent";co="#276749";em="💚";msg="Perfekt! Genug Material für Briefe, die wirklich berühren.";}
   return{score:Math.round(r*100),level:lv,color:co,emoji:em,message:msg,issues:iss,suggestions:sug};
 }
