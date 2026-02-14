@@ -41,7 +41,7 @@ export default function RootLayout({ children }) {
     brand: { "@type": "Brand", name: "LetterLift" },
     offers: {
       "@type": "AggregateOffer",
-      lowPrice: "34.90",
+      lowPrice: "9.90",
       highPrice: "79.90",
       priceCurrency: "CHF",
       availability: "https://schema.org/InStock",
@@ -55,7 +55,10 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#3D5A4C" />
         <script dangerouslySetInnerHTML={{ __html: `
