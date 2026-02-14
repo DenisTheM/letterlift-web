@@ -2,14 +2,84 @@
 import { useState, useEffect, useRef } from "react";
 
 const OCCASION_COPY = {
-  tough_times: { contextQ:(n,s)=>s?"Was durchlebst du gerade?":`Was durchlebt ${n} gerade?`, contextPh:(n,s)=>s?"z.B. Ich stecke seit Monaten in einem Tief...":`z.B. ${n} hat sich getrennt und fühlt sich einsam...`, goalPh:(n,s)=>s?"z.B. Wieder wissen, dass es weitergeht.":`z.B. Dass ${n} merkt, dass sie nicht allein ist.`, freqRec:"every3" },
-  motivation: { contextQ:(n,s)=>s?"Was ist dein Ziel?":`Was ist ${n}s Ziel?`, contextPh:(n,s)=>s?"z.B. Ich trainiere für meinen ersten Marathon...":`z.B. ${n} bereitet sich auf eine wichtige Prüfung vor...`, goalPh:(n,s)=>s?"z.B. Dass ich am Start stehe und weiss: Ich bin bereit.":`z.B. Dass ${n} mit Selbstvertrauen in die Prüfung geht.`, freqRec:"daily" },
-  confidence: { contextQ:(n,s)=>s?"Wobei fehlt dir Selbstvertrauen?":`Wobei fehlt ${n} Selbstvertrauen?`, contextPh:(n,s)=>s?"z.B. Neuer Job, fühle mich den Aufgaben nicht gewachsen...":`z.B. ${n} hat sich beruflich verändert und zweifelt...`, goalPh:(n,s)=>s?"z.B. An mich glauben.":`z.B. Dass ${n} ihre Stärken wieder sieht.`, freqRec:"every3" },
-  appreciation: { contextQ:(n,s)=>s?"Wofür bist du dankbar?":`Was schätzt du an ${n}?`, contextPh:(n,s)=>s?"z.B. Ich möchte mir bewusster machen, was gut läuft...":`z.B. ${n} ist immer für alle da, bekommt aber selten Danke gesagt...`, goalPh:(n,s)=>s?"z.B. Dankbarkeit und Zufriedenheit.":`z.B. Dass ${n} sich gesehen und wertgeschätzt fühlt.`, freqRec:"weekly" },
-  celebration: { contextQ:(n,s)=>s?"Was feierst du?":"Was gibt es zu feiern?", contextPh:(n,s)=>s?"z.B. Ich werde 40 und möchte das bewusst erleben.":`z.B. ${n} hat einen Meilenstein erreicht.`, goalPh:(n,s)=>s?"z.B. Mich selbst feiern.":`z.B. Dass ${n} merkt, wie weit sie gekommen ist.`, freqRec:"daily" },
-  growth: { contextQ:(n,s)=>s?"Woran arbeitest du gerade?":`Woran arbeitet ${n}?`, contextPh:(n,s)=>s?"z.B. Achtsamer leben, weniger Autopilot...":`z.B. ${n} ist in einer Umbruchphase...`, goalPh:(n,s)=>s?"z.B. Klarer wissen was ich will.":`z.B. Dass ${n} Klarheit gewinnt.`, freqRec:"every3" },
+  tough_times: { contextQ:(n,s)=>s?"Was durchlebst du gerade?":`Was durchlebt ${n} gerade?`, contextPh:(n,s)=>s?"z.B. Ich stecke seit Monaten in einem Tief...":`z.B. ${n} hat sich getrennt und fühlt sich einsam...`, goalPh:(n,s)=>s?"z.B. Wieder wissen, dass es weitergeht.":`z.B. Dass ${n} merkt, dass sie nicht allein ist.`, freqRec:"every3",
+    memQ:[
+      s=>s?"Gab es einen Moment, in dem du gemerkt hast: Ich bin stärker als ich dachte?":"Was habt ihr gemeinsam durchgestanden?",
+      s=>s?"Welcher Mensch hat dir in einer schweren Phase geholfen – und wie?":"Gab es einen Moment, der eure Beziehung vertieft hat?",
+      s=>s?"Welches Erlebnis gibt dir heute noch Kraft?":"Was weiss nur ihr zwei – ein Geheimnis, ein Insider?"
+    ],
+    memPh:[
+      s=>s?"z.B. Als ich die Kündigung bekam und trotzdem am nächsten Tag...":"z.B. Als ihr Vater krank war, bin ich einfach hingefahren und wir haben die ganze Nacht geredet...",
+      s=>s?"z.B. Mein Bruder hat mich damals einfach abgeholt und nichts gesagt...":"z.B. Nach dem Streit letztes Jahr haben wir beide geweint und wussten: Das hier ist echt.",
+      s=>s?"z.B. Die Wanderung am Bodensee, wo plötzlich alles klar wurde...":"z.B. Unser Codewort wenn einer von uns Hilfe braucht..."
+    ]},
+  motivation: { contextQ:(n,s)=>s?"Was ist dein Ziel?":`Was ist ${n}s Ziel?`, contextPh:(n,s)=>s?"z.B. Ich trainiere für meinen ersten Marathon...":`z.B. ${n} bereitet sich auf eine wichtige Prüfung vor...`, goalPh:(n,s)=>s?"z.B. Dass ich am Start stehe und weiss: Ich bin bereit.":`z.B. Dass ${n} mit Selbstvertrauen in die Prüfung geht.`, freqRec:"daily",
+    memQ:[
+      s=>s?"Wann hast du zuletzt etwas geschafft, woran du gezweifelt hast?":`Was hat ${s?"dich":"die Person"} schon bewiesen?`,
+      s=>s?"Welcher Moment hat dich am meisten geprägt?":"Welche gemeinsame Erinnerung zeigt ihre Stärke?",
+      s=>s?"Gibt es einen Satz oder ein Erlebnis, das dich immer wieder motiviert?":"Was würdest du ihr sagen, wenn sie aufgeben will?"
+    ],
+    memPh:[
+      s=>s?"z.B. Letztes Jahr die Präsentation vor 200 Leuten – ich war so nervös, aber es lief...":"z.B. Sie hat 3 Monate für die Prüfung gelernt und mit Bestnote bestanden...",
+      s=>s?"z.B. Der Moment als ich alleine nach Japan gereist bin...":"z.B. Wie sie beim Halbmarathon ab km 15 kämpfte aber durchhielt...",
+      s=>s?"z.B. 'Du musst nicht perfekt sein, nur mutig.'":"z.B. 'Erinnerst du dich, wie du damals...'"
+    ]},
+  confidence: { contextQ:(n,s)=>s?"Wobei fehlt dir Selbstvertrauen?":`Wobei fehlt ${n} Selbstvertrauen?`, contextPh:(n,s)=>s?"z.B. Neuer Job, fühle mich den Aufgaben nicht gewachsen...":`z.B. ${n} hat sich beruflich verändert und zweifelt...`, goalPh:(n,s)=>s?"z.B. An mich glauben.":`z.B. Dass ${n} ihre Stärken wieder sieht.`, freqRec:"every3",
+    memQ:[
+      s=>s?"Wann hast du dich zuletzt richtig kompetent gefühlt?":"Wann hast du gesehen, wie sie über sich hinausgewachsen ist?",
+      s=>s?"Wer glaubt an dich – und was hat diese Person gesagt?":"Gibt es einen Moment, in dem du dachtest: Wow, das ist sie wirklich?",
+      s=>s?"Welche Eigenschaft unterschätzt du an dir am meisten?":"Was kann sie besser als sie selbst glaubt?"
+    ],
+    memPh:[
+      s=>s?"z.B. Bei der Projektpräsentation, als alle danach klatschten...":"z.B. Ihre Rede an der Hochzeit – alle hatten Gänsehaut...",
+      s=>s?"z.B. Meine Chefin hat gesagt: 'Du bist besser als du denkst.'":"z.B. Als sie ihren ersten Kunden coachte und er danach sagte...",
+      s=>s?"z.B. Ich kann gut zuhören – das sagen alle, aber ich glaub es nie...":"z.B. Ihre Geduld mit Kindern – sie merkt gar nicht wie besonders das ist..."
+    ]},
+  appreciation: { contextQ:(n,s)=>s?"Wofür bist du dankbar?":`Was schätzt du an ${n}?`, contextPh:(n,s)=>s?"z.B. Ich möchte mir bewusster machen, was gut läuft...":`z.B. ${n} ist immer für alle da, bekommt aber selten Danke gesagt...`, goalPh:(n,s)=>s?"z.B. Dankbarkeit und Zufriedenheit.":`z.B. Dass ${n} sich gesehen und wertgeschätzt fühlt.`, freqRec:"weekly",
+    memQ:[
+      s=>s?"Welcher Moment hat dir gezeigt, was wirklich wichtig ist?":"Wann hat sie etwas getan, das du nie vergessen wirst?",
+      s=>s?"Worüber lachst du heute noch?":"Was ist euer Running Gag oder Insider-Witz?",
+      s=>s?"Welche kleine Geste eines anderen Menschen hat dich berührt?":"Was macht sie, ohne es zu merken, das anderen guttut?"
+    ],
+    memPh:[
+      s=>s?"z.B. Als ich krank war und meine Nachbarin einfach Suppe gebracht hat...":"z.B. Als ich umgezogen bin, stand sie morgens um 6 vor der Tür – ohne dass ich gefragt hatte...",
+      s=>s?"z.B. Der verbrannte Kuchen an meinem 30. Geburtstag...":"z.B. 'Das Ding mit dem Parkhaus in Italien' – wir müssen jedes Mal lachen...",
+      s=>s?"z.B. Wie mein Vater jeden Sonntag frischen Zopf backt...":"z.B. Sie merkt immer, wenn es jemandem nicht gut geht – bevor die Person es selbst weiss..."
+    ]},
+  celebration: { contextQ:(n,s)=>s?"Was feierst du?":"Was gibt es zu feiern?", contextPh:(n,s)=>s?"z.B. Ich werde 40 und möchte das bewusst erleben.":`z.B. ${n} hat einen Meilenstein erreicht.`, goalPh:(n,s)=>s?"z.B. Mich selbst feiern.":`z.B. Dass ${n} merkt, wie weit sie gekommen ist.`, freqRec:"daily",
+    memQ:[
+      s=>s?"Was ist dein stolzester Moment der letzten Jahre?":"Was hat sie auf dem Weg dorthin erlebt?",
+      s=>s?"Welcher Mensch hat diesen Erfolg mitermöglicht?":"Welche lustige Geschichte verbindet ihr?",
+      s=>s?"Was hat dich der Weg dorthin gelehrt?":"Was würdest du ihr über den Weg sagen, den sie gegangen ist?"
+    ],
+    memPh:[
+      s=>s?"z.B. Den Job zu kündigen und mein eigenes Ding zu starten...":"z.B. Die ersten Monate in der neuen Stadt, als alles unsicher war...",
+      s=>s?"z.B. Ohne meinen Bruder hätte ich den Mut nie gehabt...":"z.B. Der Abend vor der Prüfung, als wir Pizza bestellt und gelacht haben...",
+      s=>s?"z.B. Dass es okay ist, Angst zu haben und trotzdem zu springen...":"z.B. 'Du hast so oft gezweifelt – und schau wo du jetzt stehst.'"
+    ]},
+  growth: { contextQ:(n,s)=>s?"Woran arbeitest du gerade?":`Woran arbeitet ${n}?`, contextPh:(n,s)=>s?"z.B. Achtsamer leben, weniger Autopilot...":`z.B. ${n} ist in einer Umbruchphase...`, goalPh:(n,s)=>s?"z.B. Klarer wissen was ich will.":`z.B. Dass ${n} Klarheit gewinnt.`, freqRec:"every3",
+    memQ:[
+      s=>s?"Welcher Wendepunkt hat dich verändert?":"Was hat sie zuletzt verändert oder losgelassen?",
+      s=>s?"Welche Gewohnheit oder Erkenntnis hat einen Unterschied gemacht?":"Wie hat sich eure Beziehung über die Zeit verändert?",
+      s=>s?"Wo willst du in einem Jahr stehen?":"Was siehst du in ihr, das sie vielleicht noch nicht sieht?"
+    ],
+    memPh:[
+      s=>s?"z.B. Der Moment, als ich gemerkt habe: Ich muss nicht allen gefallen...":"z.B. Als sie den toxischen Job gekündigt hat – obwohl alle dagegen waren...",
+      s=>s?"z.B. Jeden Morgen 10 Minuten Stille – klingt banal, hat alles verändert...":"z.B. Früher war sie immer die Stille – heute steht sie für sich ein...",
+      s=>s?"z.B. Weniger Perfektion, mehr Mut zum Unperfekten...":"z.B. Wie ruhig und klar sie geworden ist – das ist ihr gar nicht bewusst..."
+    ]},
 };
-const DEFAULT_COPY = { contextQ:(n,s)=>s?"Was beschäftigt dich?":`Erzähl uns von ${n}`, contextPh:()=>"", goalPh:()=>"", freqRec:"every3" };
+const DEFAULT_COPY = { contextQ:(n,s)=>s?"Was beschäftigt dich?":`Erzähl uns von ${n}`, contextPh:()=>"", goalPh:()=>"", freqRec:"every3",
+  memQ:[
+    s=>s?"Beschreibe einen besonderen Moment.":"Was habt ihr zusammen erlebt, worüber ihr heute noch redet?",
+    s=>s?"Was hat dich geprägt?":"Gibt es eine Geschichte, die nur ihr zwei kennt?",
+    s=>s?"Was gibt dir Kraft?":"Was ist typisch für sie – eine Macke, ein Ritual, ein Spruch?"
+  ],
+  memPh:[
+    s=>s?"z.B. Der Tag, an dem alles anders wurde...":"z.B. Die Reise nach Lissabon, als wir...",
+    s=>s?"z.B. Ein Gespräch, das mich verändert hat...":"z.B. Unser Ritual jeden Freitagabend...",
+    s=>s?"z.B. Wenn ich an diesen Ort denke, spüre ich...":"z.B. Sie sagt immer '...' – das bringt mich jedes Mal zum Lachen..."
+  ]};
 
 
 const OCC = [
@@ -60,14 +130,20 @@ function assessQuality(d) {
   chk(d.recipientName,2,true,"Name",2);chk(d.occasion?"set":null,2,true,"Anlass");
   chk(d.contextText,4,true,"Situation",30,8);chk(d.goal,2,false,"Ziel");
   chk(d.hobbies,2,false,"Hobbies",5);chk(d.strengths,2,false,"Stärken",5);
-  chk(d.memories,5,false,"Erinnerungen",30,8);chk(d.importantPeople,1,false,"Bezugspersonen");
+  const memFields=[d.mem1,d.mem2,d.mem3,...(d.memExtra||[])].filter(Boolean);
+  const memText=memFields.join(" ");
+  chk(memText.length>0?memText:null,5,false,"Erinnerungen",30,8);
+  const goodMems=memFields.filter(m=>m&&m.trim().length>=20).length;
+  if(goodMems>=3){s+=2;mx+=2;}else if(goodMems>=2){s+=1;mx+=2;}else{mx+=2;}
+  chk(d.importantPeople,1,false,"Bezugspersonen");
   chk(d.humor?.length>0?"set":null,1,false,"Humor-Typ");
   const r=mx>0?s/mx:0;let lv,co,em,msg;
+  const pk=d.package;const briefCount=pk==="journey"?15:pk==="classic"?10:pk==="impuls"?5:1;
   if(r<0.3){lv="Unzureichend";co="#E53E3E";em="🔴";msg="Zu wenig Material.";}
-  else if(r<0.5){lv="Basis";co="#DD6B20";em="🟠";msg="Grundlage da – mehr Details machen es unvergesslich.";}
-  else if(r<0.7){lv="Gut";co="#D69E2E";em="🟡";msg="Gute Basis! Erinnerungen machen es noch persönlicher.";}
-  else if(r<0.85){lv="Sehr gut";co="#38A169";em="🟢";msg="Stark – richtig persönliche Briefe.";}
-  else{lv="Exzellent";co="#276749";em="💚";msg="Perfekt! Genug Material für Briefe, die berühren.";}
+  else if(r<0.5){lv="Basis";co="#DD6B20";em="🟠";msg=briefCount>5?`Für ${briefCount} Briefe fehlen noch Erinnerungen.`:"Grundlage da – mehr Details machen es unvergesslich.";}
+  else if(r<0.7){lv="Gut";co="#D69E2E";em="🟡";msg=goodMems<2?"Gute Basis! Noch eine Erinnerung für richtig persönliche Briefe.":"Gute Basis! Noch etwas mehr Detail macht es perfekt.";}
+  else if(r<0.85){lv="Sehr gut";co="#38A169";em="🟢";msg=`Stark! Genug Material für ${Math.min(goodMems*3,briefCount)} persönliche Briefe.`;}
+  else{lv="Exzellent";co="#276749";em="💚";msg="Perfekt! Genug Material für Briefe, die wirklich berühren.";}
   return{score:Math.round(r*100),level:lv,color:co,emoji:em,message:msg,issues:iss,suggestions:sug};
 }
 
@@ -109,13 +185,20 @@ export default function App() {
   const [d,setD]=useState({
     bookingType:null,recipientName:"",nickname:"",gender:"",relationship:"",language:"de",
     occasion:null,contextText:"",goal:"",hobbies:"",music:"",humor:[],
-    strengths:"",importantPeople:"",noGo:"",memories:"",style:[],
+    strengths:"",importantPeople:"",noGo:"",memories:"",mem1:"",mem2:"",mem3:"",memExtra:[],style:[],
     customStyleDesc:"",senderName:"",senderMessage:"",
     persona:null,personaName:"",personaDesc:"",
     package:null,frequency:"weekly",paperOption:"standard",
     street:"",zip:"",city:"",country:"CH",email:"",
   });
-  const u=(k,v)=>setD(x=>({...x,[k]:v}));
+  const u=(k,v)=>{setD(x=>{const nd={...x,[k]:v};
+    // Auto-combine memory fields into memories string
+    if(["mem1","mem2","mem3"].includes(k)||k==="memExtra"){
+      const parts=[nd.mem1,nd.mem2,nd.mem3,...(nd.memExtra||[])].filter(s=>s&&s.trim().length>0);
+      nd.memories=parts.map((p,i)=>`${i+1}) ${p.trim()}`).join("\n\n");
+    }
+    return nd;
+  });};
   useEffect(()=>{setVis(false);setTimeout(()=>setVis(true),60);},[step,view]);
   const next=()=>{setDir(1);setAnim(true);setTimeout(()=>{setStep(s=>s+1);setAnim(false);},180);};
   const back=()=>{setDir(-1);setAnim(true);setTimeout(()=>{setStep(s=>s-1);setAnim(false);},180);};
@@ -141,7 +224,7 @@ export default function App() {
   const fc=e=>e.target.style.borderColor="#5B7B6A";
   const bl=e=>e.target.style.borderColor="#D6CFC8";
 
-  const canGo=()=>{switch(sid){case"recipient":return d.recipientName.length>0;case"occasion":return!!d.occasion;case"context":return d.contextText.length>10;case"personality":return d.hobbies.length>2&&d.strengths.length>2&&d.humor.length>0;case"memories":return d.memories.length>30;case"style":return Array.isArray(d.style)&&d.style.length>0;case"package":return!!d.package;case"delivery":return!!d.frequency;case"persona":return!!d.persona;case"sender":return(d.senderName||"").length>0;case"address":return d.country==="OTHER"||( d.street.length>3&&d.city.length>1&&d.country.length>0&&(()=>{const pl={CH:4,DE:5,AT:4};const req=pl[d.country]||4;return d.zip.replace(/\D/g,"").length===req;})());default:return true;}};
+  const canGo=()=>{switch(sid){case"recipient":return d.recipientName.length>0;case"occasion":return!!d.occasion;case"context":return d.contextText.length>10;case"personality":return d.hobbies.length>2&&d.strengths.length>2&&d.humor.length>0;case"memories":return[d.mem1,d.mem2,d.mem3,...(d.memExtra||[])].filter(s=>s&&s.trim().length>=20).length>=1;case"style":return Array.isArray(d.style)&&d.style.length>0;case"package":return!!d.package;case"delivery":return!!d.frequency;case"persona":return!!d.persona;case"sender":return(d.senderName||"").length>0;case"address":return d.country==="OTHER"||( d.street.length>3&&d.city.length>1&&d.country.length>0&&(()=>{const pl={CH:4,DE:5,AT:4};const req=pl[d.country]||4;return d.zip.replace(/\D/g,"").length===req;})());default:return true;}};
   const tp=()=>{const pk=PKG.find(p=>p.id===d.package);const pa=PAP.find(p=>p.id===d.paperOption);return(pk?.price||0)+(pa?.price||0);};
 
   const renderStep=()=>{
@@ -173,10 +256,26 @@ export default function App() {
         <div><label style={L}>No-Go-Themen</label><input style={I} value={d.noGo} onChange={e=>u("noGo",e.target.value)} placeholder="z.B. Ex nicht erwähnen" onFocus={fc} onBlur={bl}/><div style={{fontSize:"11px",color:"#C0785A",fontFamily:"'DM Sans',sans-serif",marginTop:"5px"}}>⚠️ Themen, die nicht vorkommen sollen.</div></div>
       </div></div>);
 
-    case"memories":return(<div><SH t={isSelf?"Deine besonderen Momente":"Eure gemeinsame Geschichte"} s={isSelf?"Worauf bist du stolz?":"Das Herzstück deiner Briefe. Beschreibe so viele Momente wie möglich – so detailliert wie möglich."}/>
-      <div style={{padding:"14px 16px",background:"#FFF8F0",borderRadius:"12px",border:"1px solid #F0E4D4",marginBottom:"14px",fontSize:"13px",fontFamily:"'DM Sans',sans-serif",color:"#8B6914",lineHeight:1.6}}><strong>⭐ Hier entstehen die besten Briefe.</strong> Nimm dir 5-10 Minuten Zeit. Beschreibe mehrere Erinnerungen mit allen Details: Wo wart ihr? Was ist passiert? Was wurde gesagt? Wie hat es sich angefühlt? Insider-Witze, gemeinsame Reisen, Mutmomente, peinliche Geschichten – alles ist Gold wert.</div>
-      <textarea style={{...T,minHeight:"220px"}} value={d.memories} onChange={e=>u("memories",e.target.value)} placeholder={isSelf?"Beschreibe mehrere Momente, z.B.:\n\n1. Meine 3 Monate in Neuseeland – der Moment am Gipfel des Tongariro, als ich wusste: Ich kann alles schaffen...\n\n2. Der Tag, an dem ich meinen ersten Kunden gewonnen habe...":"Beschreibe mehrere Erinnerungen, z.B.:\n\n1. Unsere Interrail-Reise 2019 – als wir in Rom den letzten Zug verpasst haben und die ganze Nacht am Bahnhof gewartet haben...\n\n2. Ihr Insider-Witz über... \n\n3. Der Moment als sie..."} onFocus={fc} onBlur={bl}/>
-      <div style={{marginTop:"14px",padding:"14px 16px",background:"#F6F3EF",borderRadius:"12px",fontSize:"13px",fontFamily:"'DM Sans',sans-serif",color:"#6B6360"}}><strong>💡</strong> Insider-Witze · Reisen · Mutmomente · Liebevolle Macken</div></div>);
+    case"memories":{const _oc=OCCASION_COPY[d.occasion]||DEFAULT_COPY;const memQs=_oc.memQ||DEFAULT_COPY.memQ;const memPhs=_oc.memPh||DEFAULT_COPY.memPh;const filledCount=[d.mem1,d.mem2,d.mem3,...(d.memExtra||[])].filter(s=>s&&s.trim().length>=20).length;const totalMems=3+(d.memExtra||[]).length;return(<div><SH t={isSelf?"Deine besonderen Momente":"Eure gemeinsame Geschichte"} s={isSelf?"Das Herzstück deiner Briefe.":"Je mehr Erinnerungen, desto persönlicher die Briefe."}/>
+      <div style={{padding:"14px 16px",background:"#FFF8F0",borderRadius:"12px",border:"1px solid #F0E4D4",marginBottom:"18px",fontSize:"13px",fontFamily:"'DM Sans',sans-serif",color:"#8B6914",lineHeight:1.6}}>
+        <strong>⭐ Hier entstehen die besten Briefe.</strong> Nimm dir 5 Minuten. Jede Erinnerung wird zu einem eigenen, einzigartigen Briefmoment.
+        {d.package&&<span> {filledCount>=3?" 💚 Genug für richtig persönliche Briefe!":filledCount>=2?" 🟢 Gut! Noch eine Erinnerung macht es noch besser.":filledCount>=1?" 🟡 Guter Start! Mehr Erinnerungen = bessere Briefe.":" Beschreibe mindestens einen Moment."}</span>}
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:"16px"}}>
+        {[0,1,2].map(i=><div key={i}>
+          <label style={L}>{memQs[i](isSelf)}</label>
+          <textarea style={{...T,minHeight:"100px"}} value={i===0?d.mem1:i===1?d.mem2:d.mem3} onChange={e=>u(i===0?"mem1":i===1?"mem2":"mem3",e.target.value)} placeholder={memPhs[i](isSelf)} onFocus={fc} onBlur={bl}/>
+        </div>)}
+        {(d.memExtra||[]).map((mx,i)=><div key={`extra-${i}`}>
+          <label style={{...L,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <span>Erinnerung {i+4}</span>
+            <span onClick={()=>{const ne=[...(d.memExtra||[])];ne.splice(i,1);u("memExtra",ne);}} style={{color:"#C0785A",cursor:"pointer",fontSize:"11px",fontWeight:400,textTransform:"none",letterSpacing:0}}>Entfernen</span>
+          </label>
+          <textarea style={{...T,minHeight:"100px"}} value={mx} onChange={e=>{const ne=[...(d.memExtra||[])];ne[i]=e.target.value;u("memExtra",ne);}} placeholder="Noch ein besonderer Moment..." onFocus={fc} onBlur={bl}/>
+        </div>)}
+        {totalMems<6&&<button onClick={()=>u("memExtra",[...(d.memExtra||[]),""])} style={{background:"none",border:"1.5px dashed #D6CFC8",borderRadius:"12px",padding:"14px",fontSize:"14px",fontFamily:"'DM Sans',sans-serif",color:"#5B7B6A",cursor:"pointer",fontWeight:500,transition:"all 0.2s"}}>+ Weitere Erinnerung hinzufügen</button>}
+      </div>
+      <div style={{marginTop:"14px",padding:"14px 16px",background:"#F6F3EF",borderRadius:"12px",fontSize:"13px",fontFamily:"'DM Sans',sans-serif",color:"#6B6360"}}><strong>💡</strong> Insider-Witze · Reisen · Mutmomente · Liebevolle Macken · Rituale · Peinliche Geschichten</div></div>);}
 
     case"persona":return(<div><SH t="Wer soll dir die Briefe schreiben?" s="Wähle eine Stimme. Die Briefe klingen, als kämen sie von dieser Person."/>
       <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>{PERS.map(pt=>(<div key={pt.id} onClick={()=>u("persona",pt.id)} style={cd(d.persona===pt.id)}><div style={{fontSize:"24px",marginTop:"2px"}}>{pt.emoji}</div><div style={{flex:1}}><div style={{fontSize:"14px",fontWeight:600,fontFamily:"'DM Sans',sans-serif"}}>{pt.label}</div><div style={{fontSize:"12px",color:"#8A8480",fontFamily:"'DM Sans',sans-serif",marginTop:"2px"}}>{pt.desc}</div></div>{d.persona===pt.id&&<div style={{color:"#5B7B6A",fontSize:"17px",fontWeight:700}}>✓</div>}</div>))}</div>
