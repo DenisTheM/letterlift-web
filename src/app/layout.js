@@ -56,6 +56,7 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#3D5A4C" />
         <script dangerouslySetInnerHTML={{ __html: `
           window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
