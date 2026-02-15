@@ -177,8 +177,8 @@ export default function App() {
   const [step,setStep]=useState(0);
   const [dir,setDir]=useState(1);
   // Region/currency detection from cookie OR hostname
-  const [region,setRegion]=useState(()=>{if(typeof window!=='undefined'){const h=window.location.hostname;if(h.endsWith('.de')||h.endsWith('.at'))return 'EU';}return 'CH';});
-  useEffect(()=>{const m=document.cookie.match(/ll_region=(\w+)/);if(m)setRegion(m[1]);else{const h=window.location.hostname;if(h.endsWith('.de')||h.endsWith('.at'))setRegion('EU');}},[]);
+  const [region,setRegion]=useState("CH");
+  useEffect(()=>{const h=window.location.hostname;if(h.endsWith('.de')||h.endsWith('.at')){setRegion('EU');return;}const m=document.cookie.match(/ll_region=(\w+)/);if(m)setRegion(m[1]);},[]);
   const cur=region==="CH"?"CHF":"EUR";
   const cs=region==="CH"?"CHF ":"€";
   const PKG=region==="CH"?PKG_CH:PKG_EU;
