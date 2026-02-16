@@ -36,22 +36,33 @@ export default function ReviewPage() {
 
   const approve = async (letterId) => {
     setActing(letterId);
-    const res = await api({ action: "approve", token, letterId });
-    if (res.success) {
-      setDone(p => ({ ...p, [letterId]: "approved" }));
-      // Reload after short delay to show next letter
-      setTimeout(reload, 1500);
+    try {
+      const res = await api({ action: "approve", token, letterId });
+      if (res.success) {
+        setDone(p => ({ ...p, [letterId]: "approved" }));
+        setTimeout(reload, 1500);
+      } else {
+        setError(res.error || "Freigabe fehlgeschlagen. Bitte versuche es erneut.");
+      }
+    } catch (e) {
+      setError("Verbindungsfehler bei der Freigabe. Bitte versuche es erneut.");
     }
     setActing(null);
   };
 
   const saveEdit = async (letterId) => {
     setActing(letterId);
-    const res = await api({ action: "edit", token, letterId, editedBody: editBody });
-    if (res.success) {
-      setDone(p => ({ ...p, [letterId]: "edited" }));
-      setEditId(null);
-      setTimeout(reload, 1500);
+    try {
+      const res = await api({ action: "edit", token, letterId, editedBody: editBody });
+      if (res.success) {
+        setDone(p => ({ ...p, [letterId]: "edited" }));
+        setEditId(null);
+        setTimeout(reload, 1500);
+      } else {
+        setError(res.error || "Speichern fehlgeschlagen. Bitte versuche es erneut.");
+      }
+    } catch (e) {
+      setError("Verbindungsfehler beim Speichern. Bitte versuche es erneut.");
     }
     setActing(null);
   };
@@ -59,8 +70,13 @@ export default function ReviewPage() {
   const stopOrder = async () => {
     if (!confirm("Serie wirklich pausieren? Zukünftige Briefe werden nicht versendet.")) return;
     setActing("stop");
-    const res = await api({ action: "stop", token });
-    if (res.success) setPaused(true);
+    try {
+      const res = await api({ action: "stop", token });
+      if (res.success) setPaused(true);
+      else setError(res.error || "Pausieren fehlgeschlagen. Bitte versuche es erneut.");
+    } catch (e) {
+      setError("Verbindungsfehler. Bitte versuche es erneut.");
+    }
     setActing(null);
   };
 
@@ -81,7 +97,12 @@ export default function ReviewPage() {
       <div style={{ textAlign: "center", maxWidth: "400px", padding: "0 20px" }}>
         <div style={{ fontSize: "40px", marginBottom: "16px" }}>😔</div>
         <div style={{ fontSize: "20px", color: "#2D2926", marginBottom: "8px" }}>{error}</div>
-        <div style={{ fontSize: "14px", color: "#8A8480", fontFamily: F }}>Dieser Link ist ungültig oder abgelaufen. Prüfe deine E-Mail für den korrekten Link.</div>
+        <div style={{ fontSize: "14px", color: "#8A8480", fontFamily: F, marginBottom: "20px" }}>
+          {data ? "Bitte versuche es erneut." : "Dieser Link ist ungültig oder abgelaufen. Prüfe deine E-Mail für den korrekten Link."}
+        </div>
+        {data && <button onClick={() => { setError(null); }} style={{ background: "linear-gradient(135deg,#3D5A4C,#5B7B6A)", color: "#fff", border: "none", borderRadius: "12px", padding: "12px 28px", fontSize: "14px", fontFamily: F, fontWeight: 600, cursor: "pointer" }}>
+          Erneut versuchen
+        </button>}
       </div>
     </div>
   );
