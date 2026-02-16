@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { checkPreviewLimit, checkCheckoutLimit, checkAddressSearchLimit, createBotDetector } from "../lib/rateLimit";
+import { preCheckoutSafetyCheck, screenInputs } from "../lib/safety";
 
 const OCCASION_COPY = {
   tough_times: { contextQ:(n,s)=>s?"Was durchlebst du gerade?":`Was durchlebt ${n} gerade?`, contextPh:(n,s)=>s?"z.B. Ich stecke seit Monaten in einem Tief...":`z.B. ${n} hat sich getrennt und fühlt sich einsam...`, goalPh:(n,s)=>s?"z.B. Wieder wissen, dass es weitergeht.":`z.B. Dass ${n} merkt, dass sie nicht allein ist.`, freqRec:"every3",
@@ -349,8 +350,9 @@ export default function App() {
       <div style={{marginTop:"18px",padding:"14px 16px",background:"#F0F5EE",borderRadius:"12px",fontSize:"13px",fontFamily:"'DM Sans',sans-serif",color:"#3D5A4C",lineHeight:1.6}}>🔒 Die Adresse wird ausschliesslich für den Briefversand verwendet und nicht an Dritte weitergegeben.</div>
     </div>);}
 
-    case"preview":{const q=assessQuality(d);const gen=genPreview(d,isSelf);if(!prevTxt&&!prevLoading)fetchAIPreview();return(<div><SH t="Dein erster Brief – Vorschau" s={prevLoading?"Brief wird von unserer KI geschrieben...":"So klingt Brief Nr. 1 – geschrieben von unserer KI. Du kannst ihn bearbeiten."}/>
+    case"preview":{const q=assessQuality(d);const gen=genPreview(d,isSelf);if(!prevTxt&&!prevLoading)fetchAIPreview();const safetyWarnings=(()=>{const r=preCheckoutSafetyCheck(d);return[...r.criticalFlags,...r.warnings];})();return(<div><SH t="Dein erster Brief – Vorschau" s={prevLoading?"Brief wird von unserer KI geschrieben...":"So klingt Brief Nr. 1 – geschrieben von unserer KI. Du kannst ihn bearbeiten."}/>
       <div style={{display:"flex",alignItems:"center",gap:"14px",padding:"16px 18px",background:"#fff",borderRadius:"14px",border:"1.5px solid "+q.color+"33",marginBottom:"16px"}}><div style={{fontSize:"32px"}}>{q.emoji}</div><div style={{flex:1}}><div style={{fontSize:"14px",fontWeight:700,fontFamily:"'DM Sans',sans-serif",color:q.color}}>{q.level} – {q.score}%</div><div style={{fontSize:"12px",color:"#6B6360",fontFamily:"'DM Sans',sans-serif",marginTop:"2px"}}>{q.message}</div></div></div>
+      {safetyWarnings.length>0&&<div style={{padding:"14px 16px",background:safetyWarnings.some(w=>w.severity==="critical")?"#FFF5F5":"#FFF8F0",borderRadius:"12px",border:"1px solid "+(safetyWarnings.some(w=>w.severity==="critical")?"#FED7D7":"#F0E4D4"),marginBottom:"12px"}}>{safetyWarnings.map((w,i)=><div key={i} style={{fontSize:"13px",fontFamily:"'DM Sans',sans-serif",color:w.severity==="critical"?"#C53030":w.severity==="warning"?"#8B6914":"#3D5A4C",lineHeight:1.6,marginBottom:i<safetyWarnings.length-1?"8px":"0"}}>{w.severity==="critical"?"🚫":"💡"} {w.message}{w.action&&<span onClick={()=>{const idx=STEPS.indexOf(w.action==="noGo"?"personality":w.action);if(idx>=0)goToStep(idx);}} style={{marginLeft:"6px",textDecoration:"underline",cursor:"pointer",fontWeight:600}}>Jetzt ergänzen</span>}</div>)}</div>}
       {q.issues.length>0&&<div style={{padding:"12px 16px",background:"#FFF5F5",borderRadius:"10px",border:"1px solid #FED7D7",marginBottom:"12px"}}>{q.issues.map((x,i)=><div key={i} style={{fontSize:"12px",color:"#C53030",fontFamily:"'DM Sans',sans-serif"}}>⚠️ {x}</div>)}</div>}
       {q.suggestions.length>0&&<div style={{padding:"12px 16px",background:"#FFF8F0",borderRadius:"10px",border:"1px solid #F0E4D4",marginBottom:"12px"}}><div style={{fontSize:"12px",color:"#8B6914",fontFamily:"'DM Sans',sans-serif"}}>💡 Noch persönlicher: {q.suggestions.map((sg,si)=>{const stepMap={"Erinnerungen":"memories","Erinnerungen vertiefen":"memories","Erinnerungen ausführlicher":"memories","Hobbies":"personality","Stärken":"personality","Bezugspersonen":"personality","Ziel":"context","Humor-Typ":"style"};const target=Object.entries(stepMap).find(([k])=>sg.includes(k));const idx=target?STEPS.indexOf(target[1]):-1;return(<span key={si}>{si>0?", ":""}{idx>=0?<span onClick={()=>goToStep(idx)} style={{textDecoration:"underline",cursor:"pointer",fontWeight:600}}>{sg}</span>:sg}</span>);})}</div></div>}
       <div style={{background:d.paperOption==="standard"?"#fff":"#FFFDF7",borderRadius:"8px",boxShadow:"0 8px 32px rgba(0,0,0,0.06)",border:"1px solid #EBE7E2",minHeight:"200px"}}>
@@ -380,6 +382,9 @@ export default function App() {
         {rateLimitMsg&&<div style={{marginTop:"12px",padding:"12px 16px",background:"#FFF5F5",borderRadius:"10px",border:"1px solid #FED7D7",fontSize:"13px",fontFamily:"'DM Sans',sans-serif",color:"#C53030"}}>{rateLimitMsg}</div>}
         <button onClick={async()=>{
           if(!d.email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)){setRateLimitMsg("Bitte gültige E-Mail-Adresse eingeben");return;}
+          // Safety check – screen inputs for threats, insults, manipulation
+          const safetyResult=preCheckoutSafetyCheck(d);
+          if(!safetyResult.canProceed){setRateLimitMsg("⚠️ "+safetyResult.criticalFlags[0].message+" Bitte überprüfe deine Angaben im Feld «"+safetyResult.criticalFlags[0].field+"».");return;}
           // Bot detection
           const botResult=botDetector.current?.analyze();
           if(botResult?.isBot){console.warn("Bot detected:",botResult.reasons);setRateLimitMsg("Etwas ist schiefgelaufen. Bitte lade die Seite neu.");return;}
