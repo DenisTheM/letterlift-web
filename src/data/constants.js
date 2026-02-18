@@ -14,11 +14,12 @@ export const OCCASIONS = [
 ];
 
 export const HUMOR_TYPES = [
-  { id: "dry",       label: "Trocken" },
-  { id: "wordplay",  label: "Wortspiele" },
-  { id: "warm",      label: "Warmherzig" },
-  { id: "sarcastic", label: "Sarkastisch" },
-  { id: "none",      label: "Kein Humor" },
+  { id: "warm",        label: "Warmherzig",    desc: "Gelassen, heiter, macht Mut" },
+  { id: "dry",         label: "Trocken",       desc: "Ruhig, nüchtern, fast unemotional" },
+  { id: "wordplay",    label: "Wortspiele",    desc: "Doppeldeutig, bildhaft, spielerisch" },
+  { id: "ironic",      label: "Ironisch",      desc: "Das Gegenteil des Gesagten meinen" },
+  { id: "selfironic",  label: "Selbstironisch", desc: "Über eigene Fehler lachen" },
+  { id: "none",        label: "Kein Humor",    desc: "Ernst und aufrichtig" },
 ];
 
 export const STYLES = [

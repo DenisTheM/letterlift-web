@@ -49,8 +49,17 @@ export function findNextStep(steps, currentIndex, direction, data) {
 /** Kann der User zum nächsten Step? (Validierung) */
 export function canProceed(stepId, data) {
   switch (stepId) {
-    case "recipient":
-      return data.recipientName.length > 0;
+    case "recipient": {
+      const hasName = data.recipientName.trim().length > 0;
+      const hasGender = data.gender.length > 0;
+      const isSelf = data.bookingType === "self";
+      // Gift: Beziehung Pflicht (bei "Andere" auch Freitext)
+      const hasRelationship = isSelf || (
+        data.relationship.length > 0 &&
+        (data.relationship !== "Andere" || (data.relationshipCustom || "").trim().length > 0)
+      );
+      return hasName && hasGender && hasRelationship;
+    }
     case "occasion":
       return !!data.occasion;
     case "context":

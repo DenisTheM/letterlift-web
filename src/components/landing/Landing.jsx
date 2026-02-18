@@ -55,15 +55,15 @@ export default function Landing({ onStart, currSymbol }) {
 
         {/* Brief-Preview */}
         <div style={{ flex: "1 1 340px", minWidth: "280px", display: "flex", justifyContent: "center" }}>
-          <div style={{ position: "relative", width: "100%", maxWidth: "340px", height: "420px" }}>
+          <div style={{ position: "relative", width: "100%", maxWidth: "340px", minHeight: "420px" }}>
             {(() => { const p = HERO_LETTERS[heroOcc]; return (
-              <div style={{ position: "absolute", top: "10px", left: "10px", right: "30px", background: "#fff", borderRadius: "4px", padding: "clamp(20px,4vw,32px) clamp(18px,3vw,28px)", boxShadow: "0 12px 40px rgba(0,0,0,0.08)", transform: "rotate(-1.5deg)", fontSize: "14px", lineHeight: 1.8, color: "#3A3A3A", transition: "opacity 0.3s" }}>
+              <div style={{ position: "relative", background: "#fff", borderRadius: "4px", padding: "clamp(20px,4vw,28px) clamp(18px,3vw,24px)", boxShadow: "0 12px 40px rgba(0,0,0,0.08)", transform: "rotate(-1.5deg)", fontSize: "13.5px", lineHeight: 1.75, color: "#3A3A3A", transition: "opacity 0.3s", marginRight: "20px" }}>
                 <div style={{ marginBottom: "12px", color: colors.primaryLight, fontStyle: "italic", fontSize: "15px" }}>{p.greeting}</div>
-                <div>{p.body}</div>
+                <div style={{ whiteSpace: "pre-wrap" }}>{p.body}</div>
                 <div style={{ marginTop: "16px", color: colors.primaryLight, fontSize: "14px" }}>{p.sign}</div>
               </div>
             ); })()}
-            <div style={{ position: "absolute", bottom: "10px", right: "0px", width: "clamp(200px,65%,240px)", background: colors.surfaceMuted, borderRadius: "8px", padding: "16px 20px", boxShadow: "0 8px 24px rgba(0,0,0,0.06)", transform: "rotate(1.5deg)", display: "flex", alignItems: "center", gap: "12px" }}>
+            <div style={{ marginTop: "12px", marginLeft: "auto", width: "clamp(200px,65%,240px)", background: colors.surfaceMuted, borderRadius: "8px", padding: "14px 18px", boxShadow: "0 8px 24px rgba(0,0,0,0.06)", transform: "rotate(1.5deg)", display: "flex", alignItems: "center", gap: "12px" }}>
               <div style={{ fontSize: "20px" }}>✏️</div>
               <div>
                 <div style={{ fontWeight: 600, color: colors.primary, fontSize: "13px", fontFamily: fonts.sans }}>Brief bearbeiten</div>
@@ -77,14 +77,14 @@ export default function Landing({ onStart, currSymbol }) {
       {/* ─── Story-Timeline ─── */}
       <section style={{ background: "#fff", padding: "80px 6%" }}>
         <div style={{ maxWidth: "640px", margin: "0 auto" }}>
-          <h2 style={{ fontSize: "28px", fontWeight: 400, margin: "0 0 12px", lineHeight: 1.3, textAlign: "center" }}>Stell dir vor, du kommst nach Hause.</h2>
-          <p style={{ fontSize: "15px", fontFamily: fonts.sans, color: colors.textLight, textAlign: "center", margin: "0 0 48px" }}>Zwischen Rechnungen und Werbung liegt ein Umschlag. Dein Name darauf. Handgeschrieben.</p>
+          <h2 style={{ fontSize: "28px", fontWeight: 400, margin: "0 0 12px", lineHeight: 1.3, textAlign: "center" }}>122 Nachrichten am Tag. Keine einzige, die bleibt.</h2>
+          <p style={{ fontSize: "15px", fontFamily: fonts.sans, color: colors.textLight, textAlign: "center", margin: "0 0 48px" }}>Dann liegt zwischen Rechnungen und Werbung ein Umschlag. Dein Name darauf. Und darin Worte, die jemand nur für dich gewählt hat.</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "0", position: "relative", paddingLeft: "36px" }}>
             <div style={{ position: "absolute", left: "11px", top: "24px", bottom: "24px", width: "2px", background: `linear-gradient(to bottom, ${colors.border}, ${colors.primaryLight}, ${colors.primary})`, zIndex: 0 }} />
             {[
-              { day: "Du öffnest den Umschlag", desc: "Dein Herz klopft ein bisschen. Wer schreibt heute noch Briefe? Du liest – und merkst: Jemand hat wirklich über dich nachgedacht. Nicht ein Like, nicht ein Emoji. Echte Worte, die sitzen. Du liest ihn zweimal." },
-              { day: "Ein paar Tage später – noch einer", desc: "Diesmal geht es um etwas, das nur ihr zwei wisst. Eine Erinnerung, ein Insider, ein Moment, den du fast vergessen hattest. Du musst lachen – und dann kurz schlucken." },
-              { day: "Du ertappst dich", desc: "Beim Heimkommen checkst du zuerst den Briefkasten. Der Brief heute trifft dich anders. Jemand sieht dich. Nicht oberflächlich. Wirklich. So wie du bist – mit allem, was dazugehört." },
+              { day: "Du öffnest den Umschlag", desc: "Dein Herz klopft ein bisschen. Wer schreibt heute noch Briefe? Du liest – und merkst: Jemand hat wirklich über dich nachgedacht. Nicht ein Like, nicht ein Emoji. Echte Worte, die sitzen. Du liest ihn zweimal – und hebst ihn auf." },
+              { day: "Ein paar Tage später – noch ein Brief", desc: "Diesmal geht es um etwas, das euch verbindet. Eine Erinnerung, ein Insider, ein Moment, den du fast vergessen hattest. Du musst lachen – und dann kurz schlucken." },
+              { day: "Du ertappst dich", desc: "Beim Heimkommen checkst du zuerst den Briefkasten. Der Brief heute berührt dich anders. Jemand sieht dich. Nicht oberflächlich. Wirklich. So wie du bist – mit allem, was dazugehört." },
               { day: "Die Briefe bleiben", desc: "Sie liegen auf deinem Nachttisch. Du liest sie nochmal – an Tagen, wo du es brauchst. Nichts, das morgen schon vergessen ist. Kein Chat, der untergeht. Diese Worte sind für dich. Und sie bleiben." },
             ].map((s, i) => (
               <div key={i} style={{ position: "relative", zIndex: 1, paddingBottom: i < 3 ? "36px" : "0", paddingLeft: "28px" }}>

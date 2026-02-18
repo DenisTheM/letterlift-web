@@ -1,9 +1,51 @@
 // src/components/steps/StepMemories.jsx
 "use client";
+import { useRef, useEffect } from "react";
 import SectionHeader from "../shared/SectionHeader";
 import SpeechButton from "../shared/SpeechButton";
 import { getOccasionCopy, DEFAULT_COPY } from "../../data/occasionCopy";
-import { textareaStyle, labelStyle, fonts, colors, onFocusInput, onBlurInput } from "../../styles/theme";
+import { labelStyle, fonts, colors, onFocusInput, onBlurInput } from "../../styles/theme";
+
+/** Textarea das automatisch mitwächst */
+function AutoGrow({ value, onChange, placeholder }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.max(100, el.scrollHeight) + "px";
+  }, [value]);
+
+  return (
+    <textarea
+      ref={ref}
+      rows={3}
+      style={{
+        width: "100%",
+        minHeight: "100px",
+        padding: "12px 50px 12px 14px",
+        border: "1.5px solid #D6CFC8",
+        borderRadius: "12px",
+        fontSize: "15px",
+        fontFamily: "'DM Sans', 'Inter', sans-serif",
+        color: "#2C2C2C",
+        background: "#FDFCFA",
+        outline: "none",
+        resize: "none",
+        overflow: "hidden",
+        lineHeight: 1.6,
+        boxSizing: "border-box",
+        transition: "border-color 0.2s",
+      }}
+      value={value}
+      onChange={onChange}
+      onFocus={onFocusInput}
+      onBlur={onBlurInput}
+      placeholder={placeholder}
+    />
+  );
+}
 
 export default function StepMemories({ data, update, isSelf }) {
   const copy = getOccasionCopy(data.occasion);
@@ -18,7 +60,6 @@ export default function StepMemories({ data, update, isSelf }) {
   const hasSpeech = typeof window !== "undefined" &&
     ("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
 
-  // Hilfsfunktion: Memory-Feld lesen
   const getMemValue = (i) => i === 0 ? data.mem1 : i === 1 ? data.mem2 : data.mem3;
   const getMemKey = (i) => i === 0 ? "mem1" : i === 1 ? "mem2" : "mem3";
 
@@ -53,7 +94,8 @@ export default function StepMemories({ data, update, isSelf }) {
           marginBottom: "18px", fontSize: "13px", fontFamily: fonts.sans,
           color: colors.primary, display: "flex", alignItems: "center", gap: "8px",
         }}>
-          🎙️ <strong>Tipp:</strong> Drücke das Mikrofon und erzähl einfach drauflos – oft fällt einem mehr ein als beim Tippen.
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B7B6A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0" /><line x1="12" y1="19" x2="12" y2="22" /><line x1="8" y1="22" x2="16" y2="22" /></svg>
+          <span><strong>Tipp:</strong> Drücke das Mikrofon und erzähl einfach drauflos – oft fällt einem mehr ein als beim Tippen.</span>
         </div>
       )}
 
@@ -63,12 +105,10 @@ export default function StepMemories({ data, update, isSelf }) {
           <div key={i}>
             <label style={labelStyle}>{memQs[i](isSelf)}</label>
             <div style={{ position: "relative" }}>
-              <textarea
-                style={{ ...textareaStyle, minHeight: "100px", paddingRight: "50px" }}
+              <AutoGrow
                 value={getMemValue(i)}
                 onChange={e => update(getMemKey(i), e.target.value)}
                 placeholder={memPhs[i](isSelf)}
-                onFocus={onFocusInput} onBlur={onBlurInput}
               />
               <SpeechButton
                 initialValue={getMemValue(i)}
@@ -95,8 +135,7 @@ export default function StepMemories({ data, update, isSelf }) {
               </span>
             </label>
             <div style={{ position: "relative" }}>
-              <textarea
-                style={{ ...textareaStyle, minHeight: "100px", paddingRight: "50px" }}
+              <AutoGrow
                 value={mx}
                 onChange={e => {
                   const ne = [...(data.memExtra || [])];
@@ -104,7 +143,6 @@ export default function StepMemories({ data, update, isSelf }) {
                   update("memExtra", ne);
                 }}
                 placeholder="Noch ein besonderer Moment..."
-                onFocus={onFocusInput} onBlur={onBlurInput}
               />
               <SpeechButton
                 initialValue={mx}

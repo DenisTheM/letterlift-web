@@ -25,7 +25,7 @@ export default function StepSummary({ data, update, isSelf, currSymbol, region, 
   const rows = [
     ["Typ", isSelf ? "Für mich selbst" : "Geschenk"],
     ["Empfänger", data.recipientName + (data.nickname ? " (" + data.nickname + ")" : "")],
-    ...(!isSelf && data.relationship ? [["Beziehung", data.relationship]] : []),
+    ...(!isSelf && data.relationship ? [["Beziehung", data.relationship === "Andere" && data.relationshipCustom ? "Andere – " + data.relationshipCustom : data.relationship]] : []),
     ...(isSelf && pe ? [["Briefschreiber", pe.label + (data.personaName ? " – " + data.personaName : "")]] : []),
     ...(!isSelf ? [["Absender", data.senderName || "–"]] : []),
     ["Anlass", oc?.label || "–"],

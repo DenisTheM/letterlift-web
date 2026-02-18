@@ -1,7 +1,8 @@
 // src/components/steps/StepSender.jsx
 "use client";
 import SectionHeader from "../shared/SectionHeader";
-import { inputStyle, textareaStyle, labelStyle, optionalHint, fonts, colors, onFocusInput, onBlurInput } from "../../styles/theme";
+import { GENDERS } from "../../data/constants";
+import { inputStyle, textareaStyle, labelStyle, optionalHint, chipStyle, fonts, colors, onFocusInput, onBlurInput } from "../../styles/theme";
 
 export default function StepSender({ data, update, recipientName }) {
   return (
@@ -17,6 +18,16 @@ export default function StepSender({ data, update, recipientName }) {
             onChange={e => update("senderName", e.target.value)}
             placeholder="z.B. Lena"
             onFocus={onFocusInput} onBlur={onBlurInput} />
+        </div>
+        <div>
+          <label style={labelStyle}>
+            Ich bin <span style={{ fontSize: "11px", color: "#B0A9A3", fontWeight: 400 }}>(für den richtigen Ton)</span>
+          </label>
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {GENDERS.map(([k, l]) => (
+              <span key={k} style={chipStyle(data.senderGender === k)} onClick={() => update("senderGender", k)}>{l}</span>
+            ))}
+          </div>
         </div>
         <div>
           <label style={labelStyle}>

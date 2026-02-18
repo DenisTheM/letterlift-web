@@ -19,8 +19,8 @@ export function assessQuality(d) {
     const unique = new Set(words.map(x => x.toLowerCase()));
     const avgLen = words.length > 0 ? words.reduce((a, x) => a + x.length, 0) / words.length : 0;
 
-    // Gibberish detection
-    if (/(.){4,}/.test(t) || (unique.size === 1 && words.length > 2) || /^[^a-zA-ZäöüÄÖÜ]+$/.test(t)) {
+    // Gibberish detection: gleicher Buchstabe 4x+ hintereinander (z.B. "aaaa", "!!!!!")
+    if (/(.)\1{3,}/.test(t) || (unique.size === 1 && words.length > 2) || /^[^a-zA-ZäöüÄÖÜßéèêàáâ]+$/.test(t)) {
       issues.push(label + ": Inhalt nicht verwertbar"); return;
     }
     if (words.length > 3 && unique.size < words.length * 0.3) {

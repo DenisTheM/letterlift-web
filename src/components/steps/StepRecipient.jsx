@@ -14,19 +14,13 @@ export default function StepRecipient({ data, update, isSelf, trackInteraction }
           : "Je mehr wir erfahren, desto persönlicher."}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-        {/* Vorname */}
         <div>
           <label style={labelStyle}>Vorname</label>
-          <input
-            style={inputStyle}
-            placeholder={isSelf ? "Dein Vorname" : "z.B. Sarah"}
+          <input style={inputStyle} placeholder={isSelf ? "Dein Vorname" : "z.B. Sarah"}
             value={data.recipientName}
             onChange={e => { update("recipientName", e.target.value); trackInteraction(); }}
-            onFocus={onFocusInput} onBlur={onBlurInput}
-          />
+            onFocus={onFocusInput} onBlur={onBlurInput} />
         </div>
-
-        {/* Geschlecht */}
         <div>
           <label style={labelStyle}>
             Geschlecht <span style={{ fontSize: "11px", color: "#B0A9A3", fontWeight: 400 }}>(für korrekte Ansprache)</span>
@@ -37,32 +31,32 @@ export default function StepRecipient({ data, update, isSelf, trackInteraction }
             ))}
           </div>
         </div>
-
-        {/* Spitzname */}
         <div>
           <label style={labelStyle}>Spitzname <span style={optionalHint}>optional</span></label>
-          <input
-            style={inputStyle}
-            placeholder="z.B. Sari"
-            value={data.nickname}
+          <input style={inputStyle} placeholder="z.B. Sari" value={data.nickname}
             onChange={e => update("nickname", e.target.value)}
-            onFocus={onFocusInput} onBlur={onBlurInput}
-          />
+            onFocus={onFocusInput} onBlur={onBlurInput} />
         </div>
-
-        {/* Beziehung (nur bei Geschenk) */}
         {!isSelf && (
           <div>
             <label style={labelStyle}>Beziehung</label>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               {RELATIONSHIPS.map(r => (
-                <span key={r} style={chipStyle(data.relationship === r)} onClick={() => update("relationship", r)}>{r}</span>
+                <span key={r} style={chipStyle(data.relationship === r)} onClick={() => {
+                  update("relationship", r);
+                  if (r !== "Andere") update("relationshipCustom", "");
+                }}>{r}</span>
               ))}
             </div>
+            {data.relationship === "Andere" && (
+              <input style={{ ...inputStyle, marginTop: "10px" }}
+                placeholder="z.B. Schwiegermutter, Patenkind, Nachbar..."
+                value={data.relationshipCustom || ""}
+                onChange={e => update("relationshipCustom", e.target.value)}
+                onFocus={onFocusInput} onBlur={onBlurInput} />
+            )}
           </div>
         )}
-
-        {/* Sprache */}
         <div>
           <label style={labelStyle}>Sprache</label>
           <div style={{ display: "flex", flexWrap: "wrap" }}>

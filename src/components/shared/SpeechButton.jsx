@@ -1,7 +1,21 @@
 // src/components/shared/SpeechButton.jsx
-// Mikrofon-Button für Spracheingabe in Textfeldern
 "use client";
 import { useState, useRef } from "react";
+
+const MicIcon = ({ color = "#5B7B6A", size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="9" y="2" width="6" height="12" rx="3" />
+    <path d="M5 10a7 7 0 0 0 14 0" />
+    <line x1="12" y1="19" x2="12" y2="22" />
+    <line x1="8" y1="22" x2="16" y2="22" />
+  </svg>
+);
+
+const StopIcon = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="#fff">
+    <rect x="4" y="4" width="16" height="16" rx="2" />
+  </svg>
+);
 
 export default function SpeechButton({ onResult, initialValue = "" }) {
   const [isRec, setIsRec] = useState(false);
@@ -49,11 +63,11 @@ export default function SpeechButton({ onResult, initialValue = "" }) {
         width: "36px", height: "36px",
         cursor: "pointer", display: "flex",
         alignItems: "center", justifyContent: "center",
-        fontSize: "18px", transition: "all 0.2s",
+        transition: "all 0.2s",
         boxShadow: isRec ? "0 0 0 3px rgba(229,62,62,0.3)" : "none",
       }}
     >
-      {isRec ? "⏹" : "🎙️"}
+      {isRec ? <StopIcon /> : <MicIcon />}
     </button>
   );
 }
