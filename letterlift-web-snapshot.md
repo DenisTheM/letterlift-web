@@ -1,5 +1,5 @@
 # Codebase Snapshot: letterlift-web
-> Erstellt am: 2026-02-18 11:59
+> Erstellt am: 2026-02-18 13:40
 
 ## Verzeichnisstruktur
 ```
@@ -34,6 +34,7 @@
 ./src/app/page.js
 ./src/app/review/[token]/page.js
 ./src/app/success/page.js
+./src/components/.DS_Store
 ./src/components/landing/Landing.jsx
 ./src/components/LetterLift.jsx
 ./src/components/onboarding/OnboardingFlow.jsx
@@ -1757,15 +1758,15 @@ export default function Landing({ onStart, currSymbol }) {
 
         {/* Brief-Preview */}
         <div style={{ flex: "1 1 340px", minWidth: "280px", display: "flex", justifyContent: "center" }}>
-          <div style={{ position: "relative", width: "100%", maxWidth: "340px", height: "420px" }}>
+          <div style={{ position: "relative", width: "100%", maxWidth: "340px", minHeight: "420px" }}>
             {(() => { const p = HERO_LETTERS[heroOcc]; return (
-              <div style={{ position: "absolute", top: "10px", left: "10px", right: "30px", background: "#fff", borderRadius: "4px", padding: "clamp(20px,4vw,32px) clamp(18px,3vw,28px)", boxShadow: "0 12px 40px rgba(0,0,0,0.08)", transform: "rotate(-1.5deg)", fontSize: "14px", lineHeight: 1.8, color: "#3A3A3A", transition: "opacity 0.3s" }}>
+              <div style={{ position: "relative", background: "#fff", borderRadius: "4px", padding: "clamp(20px,4vw,28px) clamp(18px,3vw,24px)", boxShadow: "0 12px 40px rgba(0,0,0,0.08)", transform: "rotate(-1.5deg)", fontSize: "13.5px", lineHeight: 1.75, color: "#3A3A3A", transition: "opacity 0.3s", marginRight: "20px" }}>
                 <div style={{ marginBottom: "12px", color: colors.primaryLight, fontStyle: "italic", fontSize: "15px" }}>{p.greeting}</div>
-                <div>{p.body}</div>
+                <div style={{ whiteSpace: "pre-wrap" }}>{p.body}</div>
                 <div style={{ marginTop: "16px", color: colors.primaryLight, fontSize: "14px" }}>{p.sign}</div>
               </div>
             ); })()}
-            <div style={{ position: "absolute", bottom: "10px", right: "0px", width: "clamp(200px,65%,240px)", background: colors.surfaceMuted, borderRadius: "8px", padding: "16px 20px", boxShadow: "0 8px 24px rgba(0,0,0,0.06)", transform: "rotate(1.5deg)", display: "flex", alignItems: "center", gap: "12px" }}>
+            <div style={{ marginTop: "12px", marginLeft: "auto", width: "clamp(200px,65%,240px)", background: colors.surfaceMuted, borderRadius: "8px", padding: "14px 18px", boxShadow: "0 8px 24px rgba(0,0,0,0.06)", transform: "rotate(1.5deg)", display: "flex", alignItems: "center", gap: "12px" }}>
               <div style={{ fontSize: "20px" }}>✏️</div>
               <div>
                 <div style={{ fontWeight: 600, color: colors.primary, fontSize: "13px", fontFamily: fonts.sans }}>Brief bearbeiten</div>
@@ -1779,14 +1780,14 @@ export default function Landing({ onStart, currSymbol }) {
       {/* ─── Story-Timeline ─── */}
       <section style={{ background: "#fff", padding: "80px 6%" }}>
         <div style={{ maxWidth: "640px", margin: "0 auto" }}>
-          <h2 style={{ fontSize: "28px", fontWeight: 400, margin: "0 0 12px", lineHeight: 1.3, textAlign: "center" }}>Stell dir vor, du kommst nach Hause.</h2>
-          <p style={{ fontSize: "15px", fontFamily: fonts.sans, color: colors.textLight, textAlign: "center", margin: "0 0 48px" }}>Zwischen Rechnungen und Werbung liegt ein Umschlag. Dein Name darauf. Handgeschrieben.</p>
+          <h2 style={{ fontSize: "28px", fontWeight: 400, margin: "0 0 12px", lineHeight: 1.3, textAlign: "center" }}>122 Nachrichten am Tag. Keine einzige, die bleibt.</h2>
+          <p style={{ fontSize: "15px", fontFamily: fonts.sans, color: colors.textLight, textAlign: "center", margin: "0 0 48px" }}>Dann liegt zwischen Rechnungen und Werbung ein Umschlag. Dein Name darauf. Und darin Worte, die jemand nur für dich gewählt hat.</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "0", position: "relative", paddingLeft: "36px" }}>
             <div style={{ position: "absolute", left: "11px", top: "24px", bottom: "24px", width: "2px", background: `linear-gradient(to bottom, ${colors.border}, ${colors.primaryLight}, ${colors.primary})`, zIndex: 0 }} />
             {[
-              { day: "Du öffnest den Umschlag", desc: "Dein Herz klopft ein bisschen. Wer schreibt heute noch Briefe? Du liest – und merkst: Jemand hat wirklich über dich nachgedacht. Nicht ein Like, nicht ein Emoji. Echte Worte, die sitzen. Du liest ihn zweimal." },
-              { day: "Ein paar Tage später – noch einer", desc: "Diesmal geht es um etwas, das nur ihr zwei wisst. Eine Erinnerung, ein Insider, ein Moment, den du fast vergessen hattest. Du musst lachen – und dann kurz schlucken." },
-              { day: "Du ertappst dich", desc: "Beim Heimkommen checkst du zuerst den Briefkasten. Der Brief heute trifft dich anders. Jemand sieht dich. Nicht oberflächlich. Wirklich. So wie du bist – mit allem, was dazugehört." },
+              { day: "Du öffnest den Umschlag", desc: "Dein Herz klopft ein bisschen. Wer schreibt heute noch Briefe? Du liest – und merkst: Jemand hat wirklich über dich nachgedacht. Nicht ein Like, nicht ein Emoji. Echte Worte, die sitzen. Du liest ihn zweimal – und hebst ihn auf." },
+              { day: "Ein paar Tage später – noch ein Brief", desc: "Diesmal geht es um etwas, das euch verbindet. Eine Erinnerung, ein Insider, ein Moment, den du fast vergessen hattest. Du musst lachen – und dann kurz schlucken." },
+              { day: "Du ertappst dich", desc: "Beim Heimkommen checkst du zuerst den Briefkasten. Der Brief heute berührt dich anders. Jemand sieht dich. Nicht oberflächlich. Wirklich. So wie du bist – mit allem, was dazugehört." },
               { day: "Die Briefe bleiben", desc: "Sie liegen auf deinem Nachttisch. Du liest sie nochmal – an Tagen, wo du es brauchst. Nichts, das morgen schon vergessen ist. Kein Chat, der untergeht. Diese Worte sind für dich. Und sie bleiben." },
             ].map((s, i) => (
               <div key={i} style={{ position: "relative", zIndex: 1, paddingBottom: i < 3 ? "36px" : "0", paddingLeft: "28px" }}>
@@ -1988,10 +1989,10 @@ export default function LetterLift() {
 ```jsx
 // src/components/onboarding/OnboardingFlow.jsx
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import StepRouter from "../steps/StepRouter";
 import { STEP_DEFINITIONS, STEP_LABELS, shouldSkipStep, findNextStep, canProceed } from "../../data/steps";
-import { INITIAL_FORM_DATA, createUpdater } from "../../lib/formState";
+import { INITIAL_FORM_DATA, createUpdater, loadDraft, clearDraft } from "../../lib/formState";
 import { createBotDetector } from "../../lib/rateLimit";
 import { useRegion } from "../../hooks/useRegion";
 import { fonts, colors } from "../../styles/theme";
@@ -1999,58 +2000,102 @@ import { fonts, colors } from "../../styles/theme";
 export default function OnboardingFlow({ bookingType, onBack }) {
   const { region, currSymbol } = useRegion();
   const [step, setStep] = useState(0);
+  const [highestStep, setHighestStep] = useState(0);
   const [dir, setDir] = useState(1);
   const [anim, setAnim] = useState(false);
   const [vis, setVis] = useState(false);
   const [previewText, setPreviewText] = useState("");
-  const [data, setData] = useState({ ...INITIAL_FORM_DATA, bookingType });
+  const [showDraftBanner, setShowDraftBanner] = useState(false);
+  const skipHistoryRef = useRef(false);
+
+  const [data, setData] = useState(() => {
+    const draft = loadDraft();
+    if (draft && draft.bookingType === bookingType && draft.recipientName) return draft;
+    return { ...INITIAL_FORM_DATA, bookingType };
+  });
+
+  useEffect(() => {
+    const draft = loadDraft();
+    if (draft && draft.bookingType === bookingType && draft.recipientName) {
+      setShowDraftBanner(true);
+      setTimeout(() => setShowDraftBanner(false), 5000);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const update = createUpdater(setData);
 
-  // Bot detection
   const botDetector = useRef(null);
   if (!botDetector.current) botDetector.current = createBotDetector();
   const trackInteraction = () => botDetector.current?.recordInteraction("input");
 
   const isSelf = bookingType === "self";
-  const isTrial = data.package === "trial";
   const steps = STEP_DEFINITIONS[isSelf ? "self" : "gift"];
   const rN = data.recipientName || (isSelf ? "dich" : "die Person");
 
-  // Sichtbare Steps (ohne übersprungene)
   const visibleSteps = steps.filter((_, i) => !shouldSkipStep(steps[i], data));
   const visibleIndex = visibleSteps.indexOf(steps[step]);
   const total = visibleSteps.length;
   const currentStepId = steps[step];
   const progress = ((visibleIndex + 1) / total) * 100;
 
-  // Animations-Trigger bei Step-Wechsel
+  // ─── Browser History ───
+  useEffect(() => { window.history.replaceState({ step: 0 }, "", ""); }, []);
+
+  useEffect(() => {
+    const handlePopState = (e) => {
+      if (e.state && typeof e.state.step === "number") {
+        skipHistoryRef.current = true;
+        const target = e.state.step;
+        if (target < 0) { onBack(); return; }
+        setDir(target > step ? 1 : -1);
+        setAnim(true);
+        setTimeout(() => { setStep(target); setAnim(false); skipHistoryRef.current = false; }, 180);
+      } else {
+        onBack();
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [step, onBack]);
+
+  const goTo = useCallback((targetStep, direction) => {
+    setDir(direction);
+    setAnim(true);
+    if (!skipHistoryRef.current) window.history.pushState({ step: targetStep }, "", "");
+    setTimeout(() => {
+      setStep(targetStep);
+      setHighestStep(prev => Math.max(prev, targetStep));
+      setAnim(false);
+    }, 180);
+  }, []);
+
   useEffect(() => { setVis(false); setTimeout(() => setVis(true), 60); }, [step]);
+  useEffect(() => { setHighestStep(prev => Math.max(prev, step)); }, [step]);
 
   const next = () => {
     const target = findNextStep(steps, step, 1, data);
     if (target >= steps.length) return;
-    setDir(1); setAnim(true);
-    setTimeout(() => { setStep(target); setAnim(false); }, 180);
+    goTo(target, 1);
   };
 
   const back = () => {
     const target = findNextStep(steps, step, -1, data);
     if (target < 0) return;
-    setDir(-1); setAnim(true);
-    setTimeout(() => { setStep(target); setAnim(false); }, 180);
+    goTo(target, -1);
   };
 
   const goToStep = (idx) => {
-    if (idx < step) {
-      setDir(-1); setAnim(true);
-      setTimeout(() => { setStep(idx); setAnim(false); }, 200);
-    }
+    if (idx === step) return;
+    goTo(idx, idx > step ? 1 : -1);
   };
 
-  const handleReset = () => {
-    setStep(0);
-    setPreviewText("");
-    onBack();
+  const handleReset = () => { clearDraft(); setStep(0); setPreviewText(""); onBack(); };
+
+  const handleNewDraft = () => {
+    clearDraft();
+    setData({ ...INITIAL_FORM_DATA, bookingType });
+    setStep(0); setHighestStep(0); setShowDraftBanner(false);
+    window.history.replaceState({ step: 0 }, "", "");
   };
 
   const canGoNext = canProceed(currentStepId, data);
@@ -2060,7 +2105,31 @@ export default function OnboardingFlow({ bookingType, onBack }) {
       minHeight: "100vh", background: colors.bgGrad,
       fontFamily: fonts.serif, display: "flex", flexDirection: "column", alignItems: "center",
     }}>
-      {/* Header mit Step-Dots */}
+      {/* Draft-Banner */}
+      {showDraftBanner && (
+        <div style={{
+          position: "fixed", top: "16px", left: "50%", transform: "translateX(-50%)",
+          background: "#fff", borderRadius: "14px", padding: "14px 22px",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.12)", zIndex: 100,
+          display: "flex", alignItems: "center", gap: "14px",
+          fontSize: "14px", fontFamily: fonts.sans, color: colors.text,
+          animation: "slideDown 0.3s ease-out",
+        }}>
+          <span>📝 Entwurf für <strong>{data.recipientName}</strong> wiederhergestellt.</span>
+          <button onClick={handleNewDraft} style={{
+            background: "none", border: `1px solid ${colors.border}`, borderRadius: "8px",
+            padding: "6px 14px", fontSize: "12px", fontFamily: fonts.sans,
+            color: colors.textMuted, cursor: "pointer",
+          }}>Neu starten</button>
+          <button onClick={() => setShowDraftBanner(false)} style={{
+            background: "none", border: "none", fontSize: "16px",
+            color: colors.textLighter, cursor: "pointer",
+          }}>×</button>
+        </div>
+      )}
+      <style>{`@keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}`}</style>
+
+      {/* Header + Breadcrumbs */}
       <div style={{
         width: "100%", maxWidth: "660px", padding: "20px 28px",
         display: "flex", justifyContent: "space-between", alignItems: "center", boxSizing: "border-box",
@@ -2072,25 +2141,31 @@ export default function OnboardingFlow({ bookingType, onBack }) {
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
           {steps.map((s, i) => {
             if (shouldSkipStep(s, data)) return null;
+            const isCurrent = i === step;
+            const isReachable = i <= highestStep;
             return (
-              <div key={s} onClick={() => goToStep(i)}
+              <div key={s}
+                onClick={() => { if (isReachable && !isCurrent) goToStep(i); }}
                 style={{
-                  width: i === step ? "auto" : "7px", height: "7px",
-                  borderRadius: i === step ? "10px" : "50%",
-                  background: i < step ? colors.primaryLight : i === step ? colors.primary : colors.border,
-                  cursor: i < step ? "pointer" : "default",
-                  padding: i === step ? "2px 10px" : "0",
+                  width: isCurrent ? "auto" : "7px", height: "7px",
+                  borderRadius: isCurrent ? "10px" : "50%",
+                  background: i < step ? colors.primaryLight
+                    : isCurrent ? colors.primary
+                    : isReachable ? colors.primaryLight + "80"
+                    : colors.border,
+                  cursor: isReachable && !isCurrent ? "pointer" : "default",
+                  padding: isCurrent ? "2px 10px" : "0",
                   fontSize: "11px", fontFamily: fonts.sans, color: "#fff", fontWeight: 600, lineHeight: "7px",
                   transition: "all 0.3s", display: "flex", alignItems: "center",
                 }}>
-                {i === step ? STEP_LABELS[s] : ""}
+                {isCurrent ? STEP_LABELS[s] : ""}
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Progress Bar */}
+      {/* Progress */}
       <div style={{
         width: "88%", maxWidth: "580px", height: "3px",
         background: colors.borderLight, borderRadius: "100px", overflow: "hidden", marginBottom: "28px",
@@ -2102,7 +2177,7 @@ export default function OnboardingFlow({ bookingType, onBack }) {
         }} />
       </div>
 
-      {/* Step Content Card */}
+      {/* Step Card */}
       <div style={{
         background: colors.card, backdropFilter: "blur(20px)",
         borderRadius: "22px", boxShadow: "0 8px 40px rgba(0,0,0,0.05)",
@@ -2112,8 +2187,7 @@ export default function OnboardingFlow({ bookingType, onBack }) {
         transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
       }}>
         <StepRouter
-          stepId={currentStepId}
-          data={data} update={update}
+          stepId={currentStepId} data={data} update={update}
           isSelf={isSelf} recipientName={rN}
           currSymbol={currSymbol} region={region}
           trackInteraction={trackInteraction}
@@ -2123,7 +2197,7 @@ export default function OnboardingFlow({ bookingType, onBack }) {
         />
       </div>
 
-      {/* Navigation Buttons */}
+      {/* Navigation */}
       {currentStepId !== "summary" && (
         <div style={{
           display: "flex", justifyContent: "space-between",
@@ -2574,9 +2648,23 @@ export default function SectionHeader({ title, subtitle }) {
 
 ```jsx
 // src/components/shared/SpeechButton.jsx
-// Mikrofon-Button für Spracheingabe in Textfeldern
 "use client";
 import { useState, useRef } from "react";
+
+const MicIcon = ({ color = "#5B7B6A", size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="9" y="2" width="6" height="12" rx="3" />
+    <path d="M5 10a7 7 0 0 0 14 0" />
+    <line x1="12" y1="19" x2="12" y2="22" />
+    <line x1="8" y1="22" x2="16" y2="22" />
+  </svg>
+);
+
+const StopIcon = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="#fff">
+    <rect x="4" y="4" width="16" height="16" rx="2" />
+  </svg>
+);
 
 export default function SpeechButton({ onResult, initialValue = "" }) {
   const [isRec, setIsRec] = useState(false);
@@ -2624,11 +2712,11 @@ export default function SpeechButton({ onResult, initialValue = "" }) {
         width: "36px", height: "36px",
         cursor: "pointer", display: "flex",
         alignItems: "center", justifyContent: "center",
-        fontSize: "18px", transition: "all 0.2s",
+        transition: "all 0.2s",
         boxShadow: isRec ? "0 0 0 3px rgba(229,62,62,0.3)" : "none",
       }}
     >
-      {isRec ? "⏹" : "🎙️"}
+      {isRec ? <StopIcon /> : <MicIcon />}
     </button>
   );
 }
@@ -2943,10 +3031,52 @@ export default function StepDelivery({ data, update, currSymbol }) {
 ```jsx
 // src/components/steps/StepMemories.jsx
 "use client";
+import { useRef, useEffect } from "react";
 import SectionHeader from "../shared/SectionHeader";
 import SpeechButton from "../shared/SpeechButton";
 import { getOccasionCopy, DEFAULT_COPY } from "../../data/occasionCopy";
-import { textareaStyle, labelStyle, fonts, colors, onFocusInput, onBlurInput } from "../../styles/theme";
+import { labelStyle, fonts, colors, onFocusInput, onBlurInput } from "../../styles/theme";
+
+/** Textarea das automatisch mitwächst */
+function AutoGrow({ value, onChange, placeholder }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.max(100, el.scrollHeight) + "px";
+  }, [value]);
+
+  return (
+    <textarea
+      ref={ref}
+      rows={3}
+      style={{
+        width: "100%",
+        minHeight: "100px",
+        padding: "12px 50px 12px 14px",
+        border: "1.5px solid #D6CFC8",
+        borderRadius: "12px",
+        fontSize: "15px",
+        fontFamily: "'DM Sans', 'Inter', sans-serif",
+        color: "#2C2C2C",
+        background: "#FDFCFA",
+        outline: "none",
+        resize: "none",
+        overflow: "hidden",
+        lineHeight: 1.6,
+        boxSizing: "border-box",
+        transition: "border-color 0.2s",
+      }}
+      value={value}
+      onChange={onChange}
+      onFocus={onFocusInput}
+      onBlur={onBlurInput}
+      placeholder={placeholder}
+    />
+  );
+}
 
 export default function StepMemories({ data, update, isSelf }) {
   const copy = getOccasionCopy(data.occasion);
@@ -2961,7 +3091,6 @@ export default function StepMemories({ data, update, isSelf }) {
   const hasSpeech = typeof window !== "undefined" &&
     ("webkitSpeechRecognition" in window || "SpeechRecognition" in window);
 
-  // Hilfsfunktion: Memory-Feld lesen
   const getMemValue = (i) => i === 0 ? data.mem1 : i === 1 ? data.mem2 : data.mem3;
   const getMemKey = (i) => i === 0 ? "mem1" : i === 1 ? "mem2" : "mem3";
 
@@ -2996,7 +3125,8 @@ export default function StepMemories({ data, update, isSelf }) {
           marginBottom: "18px", fontSize: "13px", fontFamily: fonts.sans,
           color: colors.primary, display: "flex", alignItems: "center", gap: "8px",
         }}>
-          🎙️ <strong>Tipp:</strong> Drücke das Mikrofon und erzähl einfach drauflos – oft fällt einem mehr ein als beim Tippen.
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B7B6A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0" /><line x1="12" y1="19" x2="12" y2="22" /><line x1="8" y1="22" x2="16" y2="22" /></svg>
+          <span><strong>Tipp:</strong> Drücke das Mikrofon und erzähl einfach drauflos – oft fällt einem mehr ein als beim Tippen.</span>
         </div>
       )}
 
@@ -3006,12 +3136,10 @@ export default function StepMemories({ data, update, isSelf }) {
           <div key={i}>
             <label style={labelStyle}>{memQs[i](isSelf)}</label>
             <div style={{ position: "relative" }}>
-              <textarea
-                style={{ ...textareaStyle, minHeight: "100px", paddingRight: "50px" }}
+              <AutoGrow
                 value={getMemValue(i)}
                 onChange={e => update(getMemKey(i), e.target.value)}
                 placeholder={memPhs[i](isSelf)}
-                onFocus={onFocusInput} onBlur={onBlurInput}
               />
               <SpeechButton
                 initialValue={getMemValue(i)}
@@ -3038,8 +3166,7 @@ export default function StepMemories({ data, update, isSelf }) {
               </span>
             </label>
             <div style={{ position: "relative" }}>
-              <textarea
-                style={{ ...textareaStyle, minHeight: "100px", paddingRight: "50px" }}
+              <AutoGrow
                 value={mx}
                 onChange={e => {
                   const ne = [...(data.memExtra || [])];
@@ -3047,7 +3174,6 @@ export default function StepMemories({ data, update, isSelf }) {
                   update("memExtra", ne);
                 }}
                 placeholder="Noch ein besonderer Moment..."
-                onFocus={onFocusInput} onBlur={onBlurInput}
               />
               <SpeechButton
                 initialValue={mx}
@@ -3298,12 +3424,66 @@ export default function StepPersona({ data, update }) {
 ```jsx
 // src/components/steps/StepPersonality.jsx
 "use client";
+import { useRef, useEffect } from "react";
 import SectionHeader from "../shared/SectionHeader";
+import SpeechButton from "../shared/SpeechButton";
 import { HUMOR_TYPES } from "../../data/constants";
 import { inputStyle, labelStyle, chipStyle, fonts, colors, onFocusInput, onBlurInput } from "../../styles/theme";
 
+/** Textarea das automatisch mitwächst – reagiert auf value-Änderungen (auch von SpeechButton) */
+function AutoGrow({ value, onChange, placeholder, hasMic }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.max(48, el.scrollHeight) + "px";
+  }, [value]);
+
+  return (
+    <textarea
+      ref={ref}
+      rows={1}
+      style={{
+        width: "100%",
+        minHeight: "48px",
+        padding: hasMic ? "12px 50px 12px 14px" : "12px 14px",
+        border: "1.5px solid #D6CFC8",
+        borderRadius: "12px",
+        fontSize: "15px",
+        fontFamily: "'DM Sans', 'Inter', sans-serif",
+        color: "#2C2C2C",
+        background: "#FDFCFA",
+        outline: "none",
+        resize: "none",
+        overflow: "hidden",
+        lineHeight: 1.6,
+        boxSizing: "border-box",
+        transition: "border-color 0.2s",
+      }}
+      value={value}
+      onChange={onChange}
+      onFocus={onFocusInput}
+      onBlur={onBlurInput}
+      placeholder={placeholder}
+    />
+  );
+}
+
 export default function StepPersonality({ data, update, isSelf, recipientName }) {
   const rN = recipientName;
+
+  const toggleHumor = (id) => {
+    if (id === "none") {
+      update("humor", data.humor.includes("none") ? [] : ["none"]);
+    } else {
+      const next = data.humor.includes(id)
+        ? data.humor.filter(x => x !== id)
+        : [...data.humor.filter(x => x !== "none"), id];
+      update("humor", next);
+    }
+  };
 
   return (
     <div>
@@ -3315,10 +3495,15 @@ export default function StepPersonality({ data, update, isSelf, recipientName })
         {/* Hobbies */}
         <div>
           <label style={labelStyle}>Hobbies</label>
-          <input style={inputStyle} value={data.hobbies}
-            onChange={e => update("hobbies", e.target.value)}
-            placeholder="z.B. Yoga, Backen"
-            onFocus={onFocusInput} onBlur={onBlurInput} />
+          <div style={{ position: "relative" }}>
+            <AutoGrow
+              value={data.hobbies}
+              onChange={e => update("hobbies", e.target.value)}
+              placeholder="z.B. Yoga, Backen, Fussball beim FC Uznach"
+              hasMic
+            />
+            <SpeechButton initialValue={data.hobbies} onResult={val => update("hobbies", val)} />
+          </div>
         </div>
 
         {/* Humor-Typ */}
@@ -3326,13 +3511,8 @@ export default function StepPersonality({ data, update, isSelf, recipientName })
           <label style={labelStyle}>Humor-Typ</label>
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             {HUMOR_TYPES.map(h => (
-              <span key={h.id}
-                style={chipStyle(data.humor.includes(h.id))}
-                onClick={() => update("humor",
-                  data.humor.includes(h.id)
-                    ? data.humor.filter(x => x !== h.id)
-                    : [...data.humor, h.id]
-                )}>
+              <span key={h.id} style={chipStyle(data.humor.includes(h.id))}
+                onClick={() => toggleHumor(h.id)} title={h.desc}>
                 {h.label}
               </span>
             ))}
@@ -3342,10 +3522,15 @@ export default function StepPersonality({ data, update, isSelf, recipientName })
         {/* Stärken */}
         <div>
           <label style={labelStyle}>Stärken</label>
-          <input style={inputStyle} value={data.strengths}
-            onChange={e => update("strengths", e.target.value)}
-            placeholder="z.B. Loyal, mutig"
-            onFocus={onFocusInput} onBlur={onBlurInput} />
+          <div style={{ position: "relative" }}>
+            <AutoGrow
+              value={data.strengths}
+              onChange={e => update("strengths", e.target.value)}
+              placeholder="z.B. Loyal, mutig, geduldig"
+              hasMic
+            />
+            <SpeechButton initialValue={data.strengths} onResult={val => update("strengths", val)} />
+          </div>
         </div>
 
         {/* Bezugspersonen */}
@@ -3615,19 +3800,13 @@ export default function StepRecipient({ data, update, isSelf, trackInteraction }
           : "Je mehr wir erfahren, desto persönlicher."}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
-        {/* Vorname */}
         <div>
           <label style={labelStyle}>Vorname</label>
-          <input
-            style={inputStyle}
-            placeholder={isSelf ? "Dein Vorname" : "z.B. Sarah"}
+          <input style={inputStyle} placeholder={isSelf ? "Dein Vorname" : "z.B. Sarah"}
             value={data.recipientName}
             onChange={e => { update("recipientName", e.target.value); trackInteraction(); }}
-            onFocus={onFocusInput} onBlur={onBlurInput}
-          />
+            onFocus={onFocusInput} onBlur={onBlurInput} />
         </div>
-
-        {/* Geschlecht */}
         <div>
           <label style={labelStyle}>
             Geschlecht <span style={{ fontSize: "11px", color: "#B0A9A3", fontWeight: 400 }}>(für korrekte Ansprache)</span>
@@ -3638,32 +3817,32 @@ export default function StepRecipient({ data, update, isSelf, trackInteraction }
             ))}
           </div>
         </div>
-
-        {/* Spitzname */}
         <div>
           <label style={labelStyle}>Spitzname <span style={optionalHint}>optional</span></label>
-          <input
-            style={inputStyle}
-            placeholder="z.B. Sari"
-            value={data.nickname}
+          <input style={inputStyle} placeholder="z.B. Sari" value={data.nickname}
             onChange={e => update("nickname", e.target.value)}
-            onFocus={onFocusInput} onBlur={onBlurInput}
-          />
+            onFocus={onFocusInput} onBlur={onBlurInput} />
         </div>
-
-        {/* Beziehung (nur bei Geschenk) */}
         {!isSelf && (
           <div>
             <label style={labelStyle}>Beziehung</label>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               {RELATIONSHIPS.map(r => (
-                <span key={r} style={chipStyle(data.relationship === r)} onClick={() => update("relationship", r)}>{r}</span>
+                <span key={r} style={chipStyle(data.relationship === r)} onClick={() => {
+                  update("relationship", r);
+                  if (r !== "Andere") update("relationshipCustom", "");
+                }}>{r}</span>
               ))}
             </div>
+            {data.relationship === "Andere" && (
+              <input style={{ ...inputStyle, marginTop: "10px" }}
+                placeholder="z.B. Schwiegermutter, Patenkind, Nachbar..."
+                value={data.relationshipCustom || ""}
+                onChange={e => update("relationshipCustom", e.target.value)}
+                onFocus={onFocusInput} onBlur={onBlurInput} />
+            )}
           </div>
         )}
-
-        {/* Sprache */}
         <div>
           <label style={labelStyle}>Sprache</label>
           <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -3725,7 +3904,8 @@ export default function StepRouter({ stepId, ...props }) {
 // src/components/steps/StepSender.jsx
 "use client";
 import SectionHeader from "../shared/SectionHeader";
-import { inputStyle, textareaStyle, labelStyle, optionalHint, fonts, colors, onFocusInput, onBlurInput } from "../../styles/theme";
+import { GENDERS } from "../../data/constants";
+import { inputStyle, textareaStyle, labelStyle, optionalHint, chipStyle, fonts, colors, onFocusInput, onBlurInput } from "../../styles/theme";
 
 export default function StepSender({ data, update, recipientName }) {
   return (
@@ -3741,6 +3921,16 @@ export default function StepSender({ data, update, recipientName }) {
             onChange={e => update("senderName", e.target.value)}
             placeholder="z.B. Lena"
             onFocus={onFocusInput} onBlur={onBlurInput} />
+        </div>
+        <div>
+          <label style={labelStyle}>
+            Ich bin <span style={{ fontSize: "11px", color: "#B0A9A3", fontWeight: 400 }}>(für den richtigen Ton)</span>
+          </label>
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {GENDERS.map(([k, l]) => (
+              <span key={k} style={chipStyle(data.senderGender === k)} onClick={() => update("senderGender", k)}>{l}</span>
+            ))}
+          </div>
         </div>
         <div>
           <label style={labelStyle}>
@@ -3858,7 +4048,7 @@ export default function StepSummary({ data, update, isSelf, currSymbol, region, 
   const rows = [
     ["Typ", isSelf ? "Für mich selbst" : "Geschenk"],
     ["Empfänger", data.recipientName + (data.nickname ? " (" + data.nickname + ")" : "")],
-    ...(!isSelf && data.relationship ? [["Beziehung", data.relationship]] : []),
+    ...(!isSelf && data.relationship ? [["Beziehung", data.relationship === "Andere" && data.relationshipCustom ? "Andere – " + data.relationshipCustom : data.relationship]] : []),
     ...(isSelf && pe ? [["Briefschreiber", pe.label + (data.personaName ? " – " + data.personaName : "")]] : []),
     ...(!isSelf ? [["Absender", data.senderName || "–"]] : []),
     ["Anlass", oc?.label || "–"],
@@ -4017,11 +4207,12 @@ export const OCCASIONS = [
 ];
 
 export const HUMOR_TYPES = [
-  { id: "dry",       label: "Trocken" },
-  { id: "wordplay",  label: "Wortspiele" },
-  { id: "warm",      label: "Warmherzig" },
-  { id: "sarcastic", label: "Sarkastisch" },
-  { id: "none",      label: "Kein Humor" },
+  { id: "warm",        label: "Warmherzig",    desc: "Gelassen, heiter, macht Mut" },
+  { id: "dry",         label: "Trocken",       desc: "Ruhig, nüchtern, fast unemotional" },
+  { id: "wordplay",    label: "Wortspiele",    desc: "Doppeldeutig, bildhaft, spielerisch" },
+  { id: "ironic",      label: "Ironisch",      desc: "Das Gegenteil des Gesagten meinen" },
+  { id: "selfironic",  label: "Selbstironisch", desc: "Über eigene Fehler lachen" },
+  { id: "none",        label: "Kein Humor",    desc: "Ernst und aufrichtig" },
 ];
 
 export const STYLES = [
@@ -4100,32 +4291,32 @@ export const GENDERS = [
 export const HERO_LETTERS = [
   {
     greeting: "Liebe Lauri,",
-    body: "ich denke an dich. Nicht weil ich muss – sondern weil du mir wichtig bist. Erinnerst du dich an Portugal? Als wir uns komplett verfahren haben und du einfach aus dem Auto gestiegen bist? Keine gemeinsame Sprache, aber du hast mit Händen und Füssen geredet, bis die ganze Familie uns zum Essen eingeladen hat. Das bist du – du findest immer einen Weg. Auch jetzt. Zürich, neue Arbeit, Mila und Noah – du wuppst das. Nicht weil es leicht ist. Sondern weil du du bist.",
+    body: "ich denke an dich. Nicht weil ich muss – sondern weil du mir wichtig bist.\n\nErinnerst du dich an Portugal? Als wir uns komplett verfahren haben und du einfach aus dem Auto gestiegen bist? Keine gemeinsame Sprache, aber du hast mit Händen und Füssen geredet, bis die ganze Familie uns zum Essen eingeladen hat.\n\nDas bist du – du findest immer einen Weg. Auch jetzt. Zürich, neue Arbeit, Mila und Noah – du wuppst das. Nicht weil es leicht ist. Sondern weil du du bist.",
     sign: "Deine Natalie",
   },
   {
     greeting: "Hey Sandro,",
-    body: "hier spricht dein zukünftiges Ich. Der, der den Marathon geschafft hat. Ich weiss, bei Kilometer 25 wird dein Kopf sagen: Hör auf. Erinnerst du dich an deinen ersten 10er vor zwei Jahren? Seitenstechen ab Kilometer 6. Du wolltest aufhören. Dann lief eine Fremde neben dir und sagte: Wir laufen zusammen ins Ziel. Du hast im Ziel geweint. Dein Körper kann es – das sagt Marco, das weisst du. Jetzt muss dein Kopf folgen.",
+    body: "hier spricht dein zukünftiges Ich. Der, der den Marathon geschafft hat. Ich weiss, bei Kilometer 25 wird dein Kopf sagen: Hör auf.\n\nErinnerst du dich an deinen ersten 10er vor zwei Jahren? Seitenstechen ab Kilometer 6. Du wolltest aufhören. Dann lief eine Fremde neben dir und sagte: Wir laufen zusammen ins Ziel. Du hast im Ziel geweint.\n\nDein Körper kann es – das sagt dein Kumpel Marco, das weisst du. Jetzt muss dein Kopf folgen.",
     sign: "Sandro nach dem Marathon",
   },
   {
     greeting: "Liebe Simi,",
-    body: "ich sehe, wie du zweifelst. Ob der Schritt richtig war, ob du gut genug bist. Aber weisst du was? Letztes Jahr hat dir ein ehemaliger Schüler geschrieben. Er ist jetzt 19 und hat gesagt: Ohne Sie hätte ich das Gymnasium nie geschafft. Du hast an mich geglaubt, als niemand sonst es tat. Du hast den ganzen Abend geweint. Das bist du, Simi. Du veränderst Leben. Und jetzt ist es Zeit, dein eigenes zu verändern.",
+    body: "ich sehe, wie du zweifelst. Ob der Schritt richtig war, ob du gut genug bist. Aber weisst du was?\n\nLetztes Jahr hat dir ein ehemaliger Schüler geschrieben. Er ist jetzt 19 und hat gesagt: Ohne Sie hätte ich das Gymnasium nie geschafft. Du hast an mich geglaubt, als niemand sonst es tat.\n\nDu hast den ganzen Abend geweint.\n\nDas bist du, Simi. Du veränderst Leben.\n\nUnd jetzt ist es Zeit, dein eigenes zu verändern.",
     sign: "Dein Thomas",
   },
   {
     greeting: "Lieber Papi,",
-    body: "ich sage es zu selten. Aber wenn ich an Sonntagmorgen denke, rieche ich frischen Zopf. Seit ich denken kann, bist du in der Küche gestanden. Und das Puppenhaus – mit den funktionierenden Fensterläden und der kleinen Veranda. Drei Monate hast du daran gearbeitet, abends in der Werkstatt. Ich habe es bis heute. Du machst nie grosses Aufheben. Aber ich möchte, dass du weisst: Wir haben es gesehen. Alles.",
+    body: "ich sage es zu selten.\n\nAber wenn ich an Sonntagmorgen denke, rieche ich frischen Zopf. Seit ich denken kann, bist du in der Küche gestanden.\n\nUnd das Puppenhaus – mit den funktionierenden Fensterläden und der kleinen Veranda. Drei Monate hast du daran gearbeitet, abends in der Werkstatt. Ich habe es bis heute.\n\nDu machst nie grosses Aufheben. Aber ich möchte, dass du weisst: Wir haben es gesehen. Alles. Ein herzliches Danke dafür.",
     sign: "Deine Sarah",
   },
   {
     greeting: "Liebste Lena,",
-    body: "40! Erinnerst du dich an die Liste, die wir mit 20 geschrieben haben? Einmal ans Meer ziehen, ein Buch lesen pro Woche, irgendwann den Mut haben, Nein zu sagen. Du hast mehr geschafft als draufstand – und das meiste davon stand gar nicht auf der Liste. Die Dinge, die wirklich zählen, plant man nicht. Man lebt sie einfach.",
+    body: "40! Erinnerst du dich an die Liste, die wir mit 20 geschrieben haben?\n\nEinmal ans Meer ziehen, ein Buch lesen pro Woche, irgendwann den Mut haben, Nein zu sagen.\n\nDu hast mehr geschafft als draufstand – und das meiste davon stand gar nicht auf der Liste. Die Dinge, die wirklich zählen, plant man nicht. Man lebt sie einfach.",
     sign: "Deine Anna",
   },
   {
     greeting: "Liebe Ayla,",
-    body: "neue Stadt, neues Leben. Ich kenne dieses Gefühl – halb Angst, halb Vorfreude. Erinnerst du dich an unseren letzten Abend auf dem Lindenhof? Wir haben auf Zürich geschaut und ich habe gesagt: In einem Jahr sitzen wir auf einem Dach in Lissabon und lachen darüber. Das machen wir. Und bis dahin: Wenn das Geld knapp wird und du dich einsam fühlst – erinnere dich daran, warum du gegangen bist. Das Licht am Morgen. Das Gefühl, frei zu sein.",
+    body: "neue Stadt, neues Leben. Ich kenne dieses Gefühl – halb Angst, halb Vorfreude.\n\nErinnerst du dich an unseren letzten Abend auf dem Lindenhof? Wir haben auf Zürich geschaut und ich habe gesagt: In einem Jahr sitzen wir auf einem Dach in Lissabon und lachen darüber. Das machen wir.\n\nUnd bis dahin: Wenn du dich einsam fühlst – erinnere dich daran, warum du gegangen bist. Das Gefühl, frei zu sein. Der Mut, etwas Neues zu wagen.",
     sign: "Deine Mira",
   },
 ];
@@ -4326,8 +4517,17 @@ export function findNextStep(steps, currentIndex, direction, data) {
 /** Kann der User zum nächsten Step? (Validierung) */
 export function canProceed(stepId, data) {
   switch (stepId) {
-    case "recipient":
-      return data.recipientName.length > 0;
+    case "recipient": {
+      const hasName = data.recipientName.trim().length > 0;
+      const hasGender = data.gender.length > 0;
+      const isSelf = data.bookingType === "self";
+      // Gift: Beziehung Pflicht (bei "Andere" auch Freitext)
+      const hasRelationship = isSelf || (
+        data.relationship.length > 0 &&
+        (data.relationship !== "Andere" || (data.relationshipCustom || "").trim().length > 0)
+      );
+      return hasName && hasGender && hasRelationship;
+    }
     case "occasion":
       return !!data.occasion;
     case "context":
@@ -4422,6 +4622,8 @@ export function useRegion() {
 // API-Helfer für Supabase Edge Functions
 // ═══════════════════════════════════════════════════════
 
+import { sanitizeAll } from "./formState";
+
 const BASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
@@ -4434,16 +4636,40 @@ async function callEdgeFunction(name, body) {
     },
     body: JSON.stringify(body),
   });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "Unknown error");
+    throw new Error(`API ${name}: ${res.status} – ${text}`);
+  }
   return res.json();
+}
+
+/** Nur erlaubte Felder an die API senden */
+function preparePayload(data) {
+  const ALLOWED_KEYS = [
+    "bookingType", "recipientName", "nickname", "gender", "relationship",
+    "relationshipCustom", "language", "occasion", "contextText", "goal",
+    "hobbies", "humor", "strengths", "importantPeople", "noGo",
+    "memories", "mem1", "mem2", "mem3", "memExtra",
+    "style", "customStyleDesc",
+    "senderName", "senderGender", "senderMessage",
+    "persona", "personaName", "personaDesc",
+    "package", "frequency", "paperOption",
+    "street", "zip", "city", "country", "email",
+  ];
+  const filtered = {};
+  for (const key of ALLOWED_KEYS) {
+    if (data[key] !== undefined) filtered[key] = data[key];
+  }
+  return sanitizeAll(filtered);
 }
 
 /** KI-Vorschau generieren */
 export const fetchAIPreviewAPI = (orderData) =>
-  callEdgeFunction("generate-preview", { orderData });
+  callEdgeFunction("generate-preview", { orderData: preparePayload(orderData) });
 
 /** Checkout-Session erstellen */
 export const createCheckoutAPI = (orderData) =>
-  callEdgeFunction("create-checkout", { orderData });
+  callEdgeFunction("create-checkout", { orderData: preparePayload(orderData) });
 
 /** Review-API (get_order, approve, edit, stop) */
 export const reviewAPI = (body) =>
@@ -4456,8 +4682,11 @@ export const reviewAPI = (body) =>
 ```js
 // src/lib/formState.js
 // ═══════════════════════════════════════════════════════
-// Initialer State und Update-Logik für das Bestellformular
+// Initialer State, Update-Logik, localStorage-Persistenz
 // ═══════════════════════════════════════════════════════
+
+const STORAGE_KEY = "letterlift_draft";
+const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 Stunden
 
 export const INITIAL_FORM_DATA = {
   bookingType: null,
@@ -4465,12 +4694,12 @@ export const INITIAL_FORM_DATA = {
   nickname: "",
   gender: "",
   relationship: "",
+  relationshipCustom: "",
   language: "de",
   occasion: null,
   contextText: "",
   goal: "",
   hobbies: "",
-  music: "",
   humor: [],
   strengths: "",
   importantPeople: "",
@@ -4483,6 +4712,7 @@ export const INITIAL_FORM_DATA = {
   style: [],
   customStyleDesc: "",
   senderName: "",
+  senderGender: "",
   senderMessage: "",
   persona: null,
   personaName: "",
@@ -4498,20 +4728,90 @@ export const INITIAL_FORM_DATA = {
   _hp: "",
 };
 
+// ─── Sanitize: XSS-Schutz für Strings ───
+
+const MAX_FIELD_LENGTH = 2000;
+
+/** Entfernt HTML-Tags und begrenzt Länge */
+export function sanitize(value) {
+  if (typeof value !== "string") return value;
+  return value
+    .replace(/<[^>]*>/g, "")          // HTML-Tags entfernen
+    .replace(/javascript:/gi, "")      // JS-Injection
+    .replace(/on\w+\s*=/gi, "")        // Event-Handler
+    .slice(0, MAX_FIELD_LENGTH);
+}
+
+/** Sanitize aller String-Felder im gesamten Data-Objekt */
+export function sanitizeAll(data) {
+  const clean = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (typeof value === "string") {
+      clean[key] = sanitize(value);
+    } else if (Array.isArray(value)) {
+      clean[key] = value.map(v => typeof v === "string" ? sanitize(v) : v);
+    } else {
+      clean[key] = value;
+    }
+  }
+  return clean;
+}
+
+// ─── localStorage Persistenz ───
+
+/** Gespeicherten Draft laden (falls vorhanden + nicht abgelaufen) */
+export function loadDraft() {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
+    // Draft-Alter prüfen (24h max)
+    if (saved._savedAt && Date.now() - saved._savedAt > DRAFT_MAX_AGE_MS) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    const { _savedAt, ...fields } = saved;
+    return { ...INITIAL_FORM_DATA, ...fields };
+  } catch {
+    return null;
+  }
+}
+
+/** Aktuellen State speichern (ohne sensible Daten) */
+export function saveDraft(data) {
+  if (typeof window === "undefined") return;
+  try {
+    const { email, _hp, ...safe } = data;
+    safe._savedAt = Date.now();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(safe));
+  } catch {
+    // localStorage voll oder blockiert
+  }
+}
+
+/** Draft löschen (nach erfolgreichem Checkout) */
+export function clearDraft() {
+  if (typeof window === "undefined") return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+}
+
 /**
  * Erzeugt eine Update-Funktion, die automatisch
- * Erinnerungen zusammenfasst wenn mem-Felder sich ändern.
+ * Erinnerungen zusammenfasst, sanitized und in localStorage speichert.
  */
 export function createUpdater(setData) {
   return (key, value) => {
     setData((prev) => {
-      const next = { ...prev, [key]: value };
+      const cleanValue = typeof value === "string" ? sanitize(value) : value;
+      const next = { ...prev, [key]: cleanValue };
       // Auto-combine memory fields
       if (["mem1", "mem2", "mem3", "memExtra"].includes(key)) {
         const parts = [next.mem1, next.mem2, next.mem3, ...(next.memExtra || [])]
           .filter(s => s && s.trim().length > 0);
         next.memories = parts.map((p, i) => `${i + 1}) ${p.trim()}`).join("\n\n");
       }
+      saveDraft(next);
       return next;
     });
   };
@@ -4609,8 +4909,8 @@ export function assessQuality(d) {
     const unique = new Set(words.map(x => x.toLowerCase()));
     const avgLen = words.length > 0 ? words.reduce((a, x) => a + x.length, 0) / words.length : 0;
 
-    // Gibberish detection
-    if (/(.){4,}/.test(t) || (unique.size === 1 && words.length > 2) || /^[^a-zA-ZäöüÄÖÜ]+$/.test(t)) {
+    // Gibberish detection: gleicher Buchstabe 4x+ hintereinander (z.B. "aaaa", "!!!!!")
+    if (/(.)\1{3,}/.test(t) || (unique.size === 1 && words.length > 2) || /^[^a-zA-ZäöüÄÖÜßéèêàáâ]+$/.test(t)) {
       issues.push(label + ": Inhalt nicht verwertbar"); return;
     }
     if (words.length > 3 && unique.size < words.length * 0.3) {

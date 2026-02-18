@@ -51,6 +51,7 @@ export default function StepMemories({ data, update, isSelf }) {
   const copy = getOccasionCopy(data.occasion);
   const memQs = copy.memQ || DEFAULT_COPY.memQ;
   const memPhs = copy.memPh || DEFAULT_COPY.memPh;
+  const g = data.gender || "";
 
   const filledCount = [data.mem1, data.mem2, data.mem3, ...(data.memExtra || [])]
     .filter(s => s && s.trim().length >= 20).length;
@@ -103,12 +104,12 @@ export default function StepMemories({ data, update, isSelf }) {
         {/* 3 Standard-Erinnerungen */}
         {[0, 1, 2].map(i => (
           <div key={i}>
-            <label style={labelStyle}>{memQs[i](isSelf)}</label>
+            <label style={labelStyle}>{memQs[i](isSelf, g)}</label>
             <div style={{ position: "relative" }}>
               <AutoGrow
                 value={getMemValue(i)}
                 onChange={e => update(getMemKey(i), e.target.value)}
-                placeholder={memPhs[i](isSelf)}
+                placeholder={memPhs[i](isSelf, g)}
               />
               <SpeechButton
                 initialValue={getMemValue(i)}

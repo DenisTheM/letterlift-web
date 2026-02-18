@@ -3,15 +3,19 @@
 // Client-seitige Vorschau-Generierung (Fallback für KI)
 // ═══════════════════════════════════════════════════════
 
+import { pronouns } from "./gender";
+
 export function generatePreview(d, isSelf) {
   const nk = d.nickname || d.recipientName || "du";
+  const g = d.gender || "";
+  const p = pronouns(g);
   const styles = Array.isArray(d.style) ? d.style : [];
   const isH = styles.includes("humorous");
   const isP = styles.includes("poetic");
   const isW = styles.includes("warm") || styles.length === 0;
 
-  let greeting = isSelf ? "Hey " + nk + "," : "Liebe/r " + nk + ",";
-  if (isSelf && d.persona === "deceased") greeting = "Mein/e liebe/r " + nk + ",";
+  let greeting = isSelf ? "Hey " + nk + "," : p.liebe + " " + nk + ",";
+  if (isSelf && d.persona === "deceased") greeting = g === "m" ? "Mein lieber " + nk + "," : "Meine liebe " + nk + ",";
   if (isSelf && d.persona === "future_self") greeting = "Hey " + nk + " –";
 
   const sender = isSelf
