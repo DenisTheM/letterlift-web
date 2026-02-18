@@ -1,0 +1,164 @@
+// src/components/steps/StepSummary.jsx
+"use client";
+import { useState } from "react";
+import { PACKAGES, PAPER_OPTIONS, FREQUENCIES, OCCASIONS, STYLES, PERSONAS } from "../../data/constants";
+import { preCheckoutSafetyCheck } from "../../lib/safety";
+import { checkCheckoutLimit, createBotDetector } from "../../lib/rateLimit";
+import { createCheckoutAPI } from "../../lib/api";
+import { calculateTotal } from "../../lib/formState";
+import { inputStyle, labelStyle, fonts, colors } from "../../styles/theme";
+
+export default function StepSummary({ data, update, isSelf, currSymbol, region, previewText, trackInteraction, botDetector }) {
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const cs = currSymbol;
+  const isTrial = data.package === "trial";
+
+  const pk = PACKAGES.find(q => q.id === data.package);
+  const oc = OCCASIONS.find(o => o.id === data.occasion);
+  const st = Array.isArray(data.style) ? data.style.map(s => STYLES.find(x => x.id === s)?.label).join(", ") : "";
+  const fr = FREQUENCIES.find(f => f.id === data.frequency);
+  const pa = PAPER_OPTIONS.find(q => q.id === data.paperOption);
+  const pe = isSelf ? PERSONAS.find(q => q.id === data.persona) : null;
+  const total = calculateTotal(data, PACKAGES, PAPER_OPTIONS);
+
+  const rows = [
+    ["Typ", isSelf ? "Für mich selbst" : "Geschenk"],
+    ["Empfänger", data.recipientName + (data.nickname ? " (" + data.nickname + ")" : "")],
+    ...(!isSelf && data.relationship ? [["Beziehung", data.relationship]] : []),
+    ...(isSelf && pe ? [["Briefschreiber", pe.label + (data.personaName ? " – " + data.personaName : "")]] : []),
+    ...(!isSelf ? [["Absender", data.senderName || "–"]] : []),
+    ["Anlass", oc?.label || "–"],
+    ["Stil", st || "–"],
+    ["Paket", pk ? (pk.id === "trial" ? "Trial · 1 Brief" : pk.name + " · " + pk.letters + " Briefe") : "–"],
+    ...(isTrial ? [] : [["Frequenz", fr?.label || "–"]]),
+    ["Papier", pa?.label || "Standard"],
+    ["Adresse", data.street + ", " + data.zip + " " + data.city],
+  ];
+
+  const handleCheckout = async () => {
+    // Email-Validierung
+    if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      setErrorMsg("Bitte gültige E-Mail-Adresse eingeben"); return;
+    }
+    // Safety check
+    const safetyResult = preCheckoutSafetyCheck(data);
+    if (!safetyResult.canProceed) {
+      setErrorMsg("⚠️ " + safetyResult.criticalFlags[0].message + " Bitte überprüfe deine Angaben im Feld «" + safetyResult.criticalFlags[0].field + "»."); return;
+    }
+    // Bot detection
+    const botResult = botDetector?.analyze();
+    if (botResult?.isBot) {
+      console.warn("Bot detected:", botResult.reasons);
+      setErrorMsg("Etwas ist schiefgelaufen. Bitte lade die Seite neu."); return;
+    }
+    // Rate limit
+    const limit = checkCheckoutLimit();
+    if (!limit.allowed) { setErrorMsg(limit.message); return; }
+
+    setErrorMsg(""); setLoading(true);
+    try {
+      const res = await createCheckoutAPI({ ...data, _hp: undefined, region, previewLetter: previewText || null });
+      if (res.url) window.location.href = res.url;
+      else { setErrorMsg("Fehler beim Erstellen der Bestellung. Bitte versuche es erneut."); setLoading(false); }
+    } catch (err) {
+      setErrorMsg("Verbindungsfehler: " + err.message); setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ textAlign: "center", marginBottom: "22px" }}>
+        <div style={{ fontSize: "40px", marginBottom: "6px" }}>✉️</div>
+        <h2 style={{ fontSize: "24px", fontWeight: 400, margin: "0 0 6px", fontFamily: fonts.serif }}>Fast geschafft!</h2>
+      </div>
+
+      {/* Zusammenfassungs-Tabelle */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+        {rows.map(([l, v], i) => (
+          <div key={l} style={{
+            display: "flex", justifyContent: "space-between", padding: "11px 14px",
+            background: i % 2 === 0 ? colors.surfaceMuted : "transparent", borderRadius: "8px",
+          }}>
+            <span style={{ fontSize: "11.5px", fontFamily: fonts.sans, fontWeight: 600, color: colors.label, textTransform: "uppercase", letterSpacing: "0.06em" }}>{l}</span>
+            <span style={{ fontSize: "14px", fontFamily: fonts.sans, color: colors.text, textAlign: "right", maxWidth: "60%" }}>{v}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Preis */}
+      <div style={{ marginTop: "20px", padding: "18px 20px", background: colors.surfaceMuted, borderRadius: "14px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+          <span style={{ fontSize: "13px", fontFamily: fonts.sans, color: colors.textMuted }}>{pk?.name}</span>
+          <span style={{ fontSize: "13px", fontFamily: fonts.sans }}>{cs}{pk?.price.toFixed(2)}</span>
+        </div>
+        {pa?.price > 0 && (
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+            <span style={{ fontSize: "13px", fontFamily: fonts.sans, color: colors.textMuted }}>{pa.label}</span>
+            <span style={{ fontSize: "13px", fontFamily: fonts.sans }}>{cs}{pa.price.toFixed(2)}</span>
+          </div>
+        )}
+        <div style={{ borderTop: `1px solid ${colors.borderLight}`, paddingTop: "8px", marginTop: "4px", display: "flex", justifyContent: "space-between" }}>
+          <span style={{ fontSize: "15px", fontFamily: fonts.sans, fontWeight: 700 }}>Total</span>
+          <span style={{ fontSize: "20px", fontFamily: fonts.sans, fontWeight: 700, color: colors.primary }}>{cs}{total.toFixed(2)}</span>
+        </div>
+      </div>
+
+      {/* E-Mail */}
+      <div style={{ marginTop: "16px" }}>
+        <label style={labelStyle}>E-Mail (für Bestätigung & Brieffreigabe)</label>
+        <input
+          style={{ ...inputStyle }} type="email"
+          value={data.email || ""}
+          onChange={e => { update("email", e.target.value); trackInteraction(); }}
+          placeholder="deine@email.ch"
+        />
+        <div style={{ fontSize: "12px", fontFamily: fonts.sans, color: colors.textLight, marginTop: "6px", lineHeight: 1.5 }}>
+          Hierhin senden wir dir jeden Brief zur Freigabe, bevor er verschickt wird.
+        </div>
+      </div>
+
+      {/* Honeypot */}
+      <input type="text" name="ll_website" autoComplete="off" tabIndex={-1} aria-hidden="true"
+        style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0 }}
+        value={data._hp || ""}
+        onChange={e => { update("_hp", e.target.value); botDetector?.setHoneypotTriggered(); }}
+      />
+
+      {/* Error */}
+      {errorMsg && (
+        <div style={{ marginTop: "12px", padding: "12px 16px", background: colors.errorBg, borderRadius: "10px", border: `1px solid ${colors.errorBorder}`, fontSize: "13px", fontFamily: fonts.sans, color: colors.errorText }}>
+          {errorMsg}
+        </div>
+      )}
+
+      {/* Checkout Button */}
+      <button
+        onClick={handleCheckout}
+        disabled={loading}
+        style={{
+          width: "100%", marginTop: "20px", padding: "18px",
+          background: loading ? "#8A9E90" : colors.primaryGrad,
+          color: "#fff", border: "none", borderRadius: "14px",
+          fontSize: "16px", fontFamily: fonts.sans, fontWeight: 600,
+          cursor: loading ? "not-allowed" : "pointer",
+          transition: "all 0.2s", opacity: loading ? 0.8 : 1,
+        }}
+      >
+        {loading ? (
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ display: "inline-block", width: "16px", height: "16px", border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.6s linear infinite" }} />
+            Wird vorbereitet...
+          </span>
+        ) : (
+          "✉️ " + (isTrial ? "Trial-Brief bestellen" : isSelf ? "Briefserie starten" : "Verschenken") + " – " + cs + total.toFixed(2)
+        )}
+      </button>
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <p style={{ fontSize: "11px", color: colors.textLighter, fontFamily: fonts.sans, textAlign: "center", marginTop: "10px" }}>
+        Stripe · Zufriedenheitsgarantie · Jederzeit pausierbar
+      </p>
+    </div>
+  );
+}

@@ -6,12 +6,13 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Helper: Call edge function
 export async function callFunction(name, body) {
   const res = await fetch(`${supabaseUrl}/functions/v1/${name}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${supabaseAnonKey}`,
+      "Authorization": `Bearer ${supabaseAnonKey}`,
     },
     body: JSON.stringify(body),
   });
