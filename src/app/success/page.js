@@ -1,11 +1,16 @@
 // src/app/success/page.js
 "use client";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 
 function SuccessContent() {
   const params = useSearchParams();
   const orderId = params.get("order");
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setVisible(true), 100);
+  }, []);
 
   return (
     <div style={{
@@ -21,75 +26,146 @@ function SuccessContent() {
         textAlign: "center",
         background: "#fff",
         borderRadius: "20px",
-        padding: "48px 36px",
+        padding: "52px 40px",
         boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(12px)",
+        transition: "all 0.6s ease",
       }}>
-        <div style={{ fontSize: "56px", marginBottom: "16px" }}>✉️</div>
+        {/* Animated heart */}
+        <div style={{
+          fontSize: "48px",
+          marginBottom: "24px",
+          animation: "pulse 2s ease-in-out infinite",
+        }}>💛</div>
+
         <h1 style={{
-          fontSize: "28px",
+          fontSize: "26px",
           fontWeight: 400,
           fontFamily: "'Lora', Georgia, serif",
-          margin: "0 0 12px",
+          margin: "0 0 16px",
           color: "#2C2C2C",
+          lineHeight: 1.4,
         }}>
-          Danke für deine Bestellung!
+          Das ist etwas Besonderes.
         </h1>
+
         <p style={{
           fontSize: "16px",
-          fontFamily: "'DM Sans', sans-serif",
-          color: "#6B6360",
-          lineHeight: 1.7,
-          margin: "0 0 24px",
+          fontFamily: "Georgia, serif",
+          color: "#4A4543",
+          lineHeight: 1.8,
+          margin: "0 0 12px",
         }}>
-          Die Briefe werden jetzt generiert – das dauert nur wenige Minuten. 
-          Du erhältst eine E-Mail, sobald der erste Brief bereit ist.
+          Du hast gerade entschieden, jemandem mit Worten Kraft zu geben.
         </p>
+
+        <p style={{
+          fontSize: "15px",
+          fontFamily: "Georgia, serif",
+          color: "#6B6360",
+          lineHeight: 1.8,
+          margin: "0 0 32px",
+        }}>
+          Wir schreiben jetzt deine Briefe – jeden einzelnen mit Herz. 
+          Du bekommst eine E-Mail, sobald es losgeht.
+        </p>
+
+        {/* Subtle divider */}
         <div style={{
-          background: "#F0F5EE",
-          borderRadius: "12px",
-          padding: "16px 20px",
+          width: "40px",
+          height: "2px",
+          background: "linear-gradient(90deg, #5B7B6A, #A8D5BA)",
+          margin: "0 auto 32px",
+          borderRadius: "1px",
+        }} />
+
+        <div style={{
+          background: "#F8F6F3",
+          borderRadius: "14px",
+          padding: "24px",
+          marginBottom: "28px",
+          textAlign: "left",
+        }}>
+          <p style={{
+            fontSize: "14px",
+            fontFamily: "'DM Sans', sans-serif",
+            color: "#3D5A4C",
+            lineHeight: 1.8,
+            margin: 0,
+          }}>
+            <strong>Was jetzt passiert:</strong><br/>
+            Deine Briefe werden geschrieben. Sobald der erste bereit ist, 
+            bekommst du eine E-Mail – dann kannst du ihn lesen, anpassen 
+            und freigeben. Erst nach deinem OK geht er raus.
+          </p>
+        </div>
+
+        <p style={{
           fontSize: "14px",
           fontFamily: "'DM Sans', sans-serif",
-          color: "#3D5A4C",
-          marginBottom: "24px",
+          color: "#8A8480",
+          lineHeight: 1.6,
+          margin: "0 0 24px",
         }}>
-          <strong>So geht es weiter:</strong><br/>
-          1. Briefe werden generiert (1–3 Min.)<br/>
-          2. Du erhältst jeden Brief vorab per E-Mail<br/>
-          3. Freigeben, anpassen oder stoppen – du hast die Kontrolle<br/>
-          4. Nach Freigabe: Druck & Versand via Schweizer Post
-        </div>
+          Du behältst die volle Kontrolle.<br/>
+          Kein Brief wird ohne dein Wissen verschickt.
+        </p>
+
         {orderId && (
           <p style={{
             fontSize: "12px",
             fontFamily: "'DM Sans', sans-serif",
-            color: "#B0A9A3",
+            color: "#C5BFB9",
+            margin: "0 0 20px",
           }}>
-            Bestellnummer: {orderId.substring(0, 8)}...
+            Bestellnummer: {orderId.substring(0, 8)}
           </p>
         )}
+
         <a href="/" style={{
           display: "inline-block",
-          marginTop: "16px",
           padding: "14px 32px",
-          background: "linear-gradient(135deg, #3D5A4C, #5B7B6A)",
-          color: "#fff",
+          background: "transparent",
+          color: "#5B7B6A",
+          border: "1.5px solid #D6CFC8",
           borderRadius: "12px",
           textDecoration: "none",
-          fontSize: "15px",
+          fontSize: "14px",
           fontFamily: "'DM Sans', sans-serif",
-          fontWeight: 600,
+          fontWeight: 500,
+          transition: "all 0.2s",
         }}>
           Zurück zur Startseite
         </a>
       </div>
+
+      {/* Pulse animation */}
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.08); }
+        }
+      `}</style>
     </div>
   );
 }
 
 export default function SuccessPage() {
   return (
-    <Suspense fallback={<div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"#FBF8F5"}}>Laden...</div>}>
+    <Suspense fallback={
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#FBF8F5",
+        fontFamily: "'DM Sans', sans-serif",
+        color: "#B0A9A3",
+      }}>
+        Einen Moment...
+      </div>
+    }>
       <SuccessContent />
     </Suspense>
   );
