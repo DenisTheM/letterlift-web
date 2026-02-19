@@ -61,13 +61,13 @@ export default function StepSummary({ data, update, isSelf, currSymbol, region, 
       const res = await createCheckoutAPI({ ...data, _hp: undefined, region, previewLetter: previewText || null });
       if (res.url) {
         try {
-          sessionStorage.setItem("ll_success", JSON.stringify({
+          localStorage.setItem("ll_success", JSON.stringify({
             name: data.nickname || data.recipientName,
             occasion: data.occasion,
             letterCount: (data.package === "trial" ? 1 : data.package === "impuls" ? 5 : data.package === "classic" ? 10 : 15),
             bookingType: data.bookingType,
           }));
-        } catch (e) { /* sessionStorage not available */ }
+        } catch (e) { /* localStorage not available */ }
         window.location.href = res.url;
       }
       else { setErrorMsg("Fehler beim Erstellen der Bestellung. Bitte versuche es erneut."); setLoading(false); }

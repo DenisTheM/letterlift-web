@@ -1,3 +1,55 @@
+#!/bin/bash
+# ═══════════════════════════════════════════════════════════
+# LetterLift – Success-Page Fix: Daten via sessionStorage
+# Statt API-Calls speichern wir die Daten vor dem
+# Stripe-Redirect in sessionStorage.
+# ═══════════════════════════════════════════════════════════
+set -euo pipefail
+
+cd ~/Projekte/letterlift-web
+
+echo "💛 LetterLift – Success-Page via sessionStorage"
+echo "================================================"
+echo ""
+
+# ─── 1. StepSummary: Daten vor Redirect speichern ───
+echo "1/2 → StepSummary patchen (sessionStorage vor Redirect)..."
+
+python3 << 'PYEOF'
+with open("src/components/steps/StepSummary.jsx", "r") as f:
+    content = f.read()
+
+old = '      if (res.url) window.location.href = res.url;'
+
+new = """      if (res.url) {
+        try {
+          sessionStorage.setItem("ll_success", JSON.stringify({
+            name: data.nickname || data.recipientName,
+            occasion: data.occasion,
+            letterCount: (data.package === "trial" ? 1 : data.package === "impuls" ? 5 : data.package === "classic" ? 10 : 15),
+            bookingType: data.bookingType,
+          }));
+        } catch (e) { /* sessionStorage not available */ }
+        window.location.href = res.url;
+      }"""
+
+if old in content:
+    content = content.replace(old, new, 1)
+    with open("src/components/steps/StepSummary.jsx", "w") as f:
+        f.write(content)
+    print("   ✅ StepSummary – sessionStorage vor Redirect")
+else:
+    print("   ⚠️  Patch-Stelle nicht gefunden")
+    # Debug
+    import re
+    matches = [m.start() for m in re.finditer(r"res\.url", content)]
+    print(f"   'res.url' found at positions: {matches}")
+PYEOF
+
+# ─── 2. Success-Page: aus sessionStorage lesen ───
+echo "2/2 → Success-Page (liest aus sessionStorage)..."
+
+cat > src/app/success/page.js << 'SUCCESSJS'
 // src/app/success/page.js
 "use client";
 import { useSearchParams } from "next/navigation";
@@ -47,12 +99,12 @@ function SuccessContent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Lese Daten aus localStorage (gespeichert vor Stripe-Redirect)
+    // Lese Daten aus sessionStorage (gespeichert vor Stripe-Redirect)
     try {
-      const raw = localStorage.getItem("ll_success");
+      const raw = sessionStorage.getItem("ll_success");
       if (raw) {
         setData(JSON.parse(raw));
-        localStorage.removeItem("ll_success"); // Einmal lesen, dann löschen
+        sessionStorage.removeItem("ll_success"); // Einmal lesen, dann löschen
       }
     } catch (e) { /* nicht verfügbar */ }
     setTimeout(() => setVisible(true), 100);
@@ -204,3 +256,27 @@ export default function SuccessPage() {
     </Suspense>
   );
 }
+SUCCESSJS
+
+echo "   ✅ Success-Page – liest aus sessionStorage"
+echo ""
+
+# Deploy
+echo "Deploying to Vercel..."
+git add src/components/steps/StepSummary.jsx src/app/success/page.js
+git commit -m "Success-Page: sessionStorage statt API, kontextabhängige Texte"
+git push
+
+echo ""
+echo "═══════════════════════════════════════════"
+echo "✅ Success-Page Fix deployed!"
+echo ""
+echo "  Ablauf:"
+echo "  1. StepSummary speichert Name/Anlass/Paket in sessionStorage"
+echo "  2. Stripe-Redirect → Zahlung → zurück zu /success"
+echo "  3. Success-Page liest sessionStorage → zeigt emotionalen Text"
+echo "  4. sessionStorage wird danach gelöscht (einmalig)"
+echo ""
+echo "  Kein API-Call, kein RLS-Problem, kein gender-Feld."
+echo "  Teste mit einer neuen Bestellung!"
+echo "═══════════════════════════════════════════"

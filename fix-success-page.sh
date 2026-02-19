@@ -1,13 +1,32 @@
+#!/bin/bash
+# ═══════════════════════════════════════════════════════════
+# LetterLift – Emotionale Success-Page (kontextabhängig)
+# Zeigt einen persönlichen Satz basierend auf Anlass, Name,
+# Briefanzahl und Buchungstyp.
+# ═══════════════════════════════════════════════════════════
+set -euo pipefail
+
+cd ~/Projekte/letterlift-web
+
+echo "💛 LetterLift – Success-Page kontextabhängig"
+echo "============================================="
+echo ""
+
+cat > src/app/success/page.js << 'SUCCESSJS'
 // src/app/success/page.js
 "use client";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState, useEffect } from "react";
 
 // ─── Kontextabhängige Texte ───
-function getMessage(occasion, isSelf, name, count) {
+function getMessage(occasion, isSelf, name, count, gender) {
+  // Pronoun helper
+  const sie = gender === "m" ? "er" : "sie";
+  const ihn = gender === "m" ? "ihn" : "sie";
+
   const copy = {
     tough_times: {
-      gift: `Irgendwann wird ${name} zum Briefkasten gehen und dort etwas finden, womit niemand gerechnet hat. Kein Paket, keine Rechnung. Sondern jemand, der an ${name} denkt.`,
+      gift: `Irgendwann wird ${name} zum Briefkasten gehen und dort etwas finden, womit ${sie} nicht gerechnet hat. Kein Paket, keine Rechnung. Sondern jemand, der an ${ihn} denkt.`,
       self: `Bald liegt der erste Brief in deinem Briefkasten. An einem ganz normalen Tag – vielleicht genau dem, an dem du ihn brauchst.`,
     },
     motivation: {
@@ -15,7 +34,7 @@ function getMessage(occasion, isSelf, name, count) {
       self: `An den Tagen, an denen du dich fragst wozu – wird ein Brief da sein. Geschrieben für genau diesen Moment.`,
     },
     confidence: {
-      gift: `${count} ${count === 1 ? "Brief" : "Briefe"}, die ${name} sagen, was man sich selbst so selten glaubt. Dass man genug ist. Dass man es kann. In deinen Worten.`,
+      gift: `${count} ${count === 1 ? "Brief" : "Briefe"}, die ${name} sagen, was ${sie} sich selbst nicht glaubt. Dass ${sie} genug ist. Dass ${sie} es kann. In deinen Worten.`,
       self: `Briefe, die sagen, was du dir selbst zu selten sagst. Nicht als Floskel. Weil es stimmt.`,
     },
     appreciation: {
@@ -35,6 +54,7 @@ function getMessage(occasion, isSelf, name, count) {
   const block = copy[occasion];
   if (block) return isSelf ? block.self : block.gift;
 
+  // Fallback
   return isSelf
     ? `Bald liegt der erste Brief in deinem Briefkasten. Geschrieben für dich.`
     : `${name} wird bald einen Brief in den Händen halten. Einen echten Brief. Von dir.`;
@@ -47,29 +67,43 @@ function SuccessContent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Lese Daten aus localStorage (gespeichert vor Stripe-Redirect)
-    try {
-      const raw = localStorage.getItem("ll_success");
-      if (raw) {
-        setData(JSON.parse(raw));
-        localStorage.removeItem("ll_success"); // Einmal lesen, dann löschen
+    if (!orderId) { setTimeout(() => setVisible(true), 100); return; }
+
+    const BASE = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+    const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+    const headers = { apikey: KEY, Authorization: `Bearer ${KEY}` };
+
+    Promise.all([
+      fetch(`${BASE}/rest/v1/orders?id=eq.${orderId}&select=booking_type,letter_count,package_name`, { headers }).then(r => r.json()),
+      fetch(`${BASE}/rest/v1/recipients?order_id=eq.${orderId}&select=nickname,recipient_name,gender`, { headers }).then(r => r.json()),
+      fetch(`${BASE}/rest/v1/onboarding_data?order_id=eq.${orderId}&select=occasion`, { headers }).then(r => r.json()),
+    ]).then(([orders, recipients, onboarding]) => {
+      const o = orders?.[0];
+      const r = recipients?.[0];
+      const ob = onboarding?.[0];
+      if (o && r) {
+        setData({
+          bookingType: o.booking_type,
+          letterCount: o.letter_count,
+          name: r.nickname || r.recipient_name,
+          gender: r.gender,
+          occasion: ob?.occasion,
+        });
       }
-    } catch (e) { /* nicht verfügbar */ }
-    setTimeout(() => setVisible(true), 100);
-  }, []);
+      setTimeout(() => setVisible(true), 100);
+    }).catch(() => setTimeout(() => setVisible(true), 100));
+  }, [orderId]);
 
   const isSelf = data?.bookingType === "self";
-  const name = data?.name || "";
-  const count = data?.letterCount || "";
+  const name = data?.name || "...";
+  const count = data?.letterCount || "?";
 
-  const headline = data
-    ? isSelf
-      ? `${count} ${count === 1 ? "Brief" : "Briefe"} an dich.`
-      : `${count} ${count === 1 ? "Brief" : "Briefe"} an ${name}.`
-    : "";
+  const headline = isSelf
+    ? `${count} ${count === 1 ? "Brief" : "Briefe"} an dich.`
+    : `${count} ${count === 1 ? "Brief" : "Briefe"} an ${name}.`;
 
   const message = data
-    ? getMessage(data.occasion, isSelf, name, count)
+    ? getMessage(data.occasion, isSelf, name, count, data.gender)
     : "";
 
   return (
@@ -100,7 +134,7 @@ function SuccessContent() {
         }}>💛</div>
 
         {/* Headline */}
-        {headline && (
+        {data && (
           <p style={{
             fontSize: "15px",
             fontFamily: "'DM Sans', sans-serif",
@@ -204,3 +238,29 @@ export default function SuccessPage() {
     </Suspense>
   );
 }
+SUCCESSJS
+
+echo "✅ src/app/success/page.js aktualisiert"
+echo ""
+
+echo "⚠️  Die Seite lädt Daten via Supabase REST API (anon key)."
+echo "   Falls RLS den Zugriff blockiert, müssen wir Policies setzen."
+echo "   Prüfe nach dem Deploy ob die Daten laden."
+echo ""
+
+# Deploy
+echo "Deploying to Vercel..."
+git add src/app/success/page.js
+git commit -m "Success-Page: kontextabhängige emotionale Texte basierend auf Anlass"
+git push
+
+echo ""
+echo "═══════════════════════════════════════════"
+echo "✅ Success-Page deployed!"
+echo ""
+echo "  💛 6 Anlässe × 2 Buchungstypen = 12 Textvarianten"
+echo "  💛 Personalisiert mit Name + Briefanzahl"
+echo "  💛 Gender-aware Pronomen"
+echo "  💛 Fallback bei fehlenden Daten"
+echo "  💛 Kein Info-Dump – ein Satz + Stille"
+echo "═══════════════════════════════════════════"
