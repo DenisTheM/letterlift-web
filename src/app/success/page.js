@@ -47,12 +47,11 @@ function SuccessContent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Lese Daten aus localStorage (gespeichert vor Stripe-Redirect)
     try {
       const raw = localStorage.getItem("ll_success");
       if (raw) {
         setData(JSON.parse(raw));
-        localStorage.removeItem("ll_success"); // Einmal lesen, dann löschen
+        localStorage.removeItem("ll_success");
       }
     } catch (e) { /* nicht verfügbar */ }
     setTimeout(() => setVisible(true), 100);
@@ -68,9 +67,11 @@ function SuccessContent() {
       : `${count} ${count === 1 ? "Brief" : "Briefe"} an ${name}.`
     : "";
 
-  const message = data
-    ? getMessage(data.occasion, isSelf, name, count)
-    : "";
+  const message = data ? getMessage(data.occasion, isSelf, name, count) : "";
+
+  // Bestellinfo-Zeile
+  const infoParts = [data?.packageName, data?.letterCount ? `${data.letterCount} Briefe` : "", data?.frequency].filter(Boolean);
+  const infoLine = infoParts.join(" · ");
 
   return (
     <div style={{
@@ -132,7 +133,7 @@ function SuccessContent() {
           width: "36px",
           height: "2px",
           background: "linear-gradient(90deg, #5B7B6A, #A8D5BA)",
-          margin: "0 auto 36px",
+          margin: "0 auto 32px",
           borderRadius: "1px",
         }} />
 
@@ -140,23 +141,53 @@ function SuccessContent() {
         <p style={{
           fontSize: "15px",
           fontFamily: "'DM Sans', sans-serif",
-          color: "#8A8480",
+          color: "#6B6360",
           lineHeight: 1.6,
-          margin: "0 0 28px",
+          margin: "0 0 8px",
         }}>
           Wir schreiben jetzt deine Briefe.
         </p>
 
-        {/* Bestellnummer */}
-        {orderId && (
-          <p style={{
-            fontSize: "12px",
-            fontFamily: "'DM Sans', sans-serif",
-            color: "#C5BFB9",
-            margin: "0 0 24px",
+        <p style={{
+          fontSize: "14px",
+          fontFamily: "'DM Sans', sans-serif",
+          color: "#8A8480",
+          lineHeight: 1.7,
+          margin: "0 0 28px",
+        }}>
+          Danke für deine Bestellung.{data?.email ? ` Eine Bestätigung ist unterwegs an ${data.email}.` : ""} Sobald der erste Brief bereit ist, melden wir uns bei dir.
+        </p>
+
+        {/* Bestelldetails */}
+        {(infoLine || orderId) && (
+          <div style={{
+            background: "#F8F6F3",
+            borderRadius: "10px",
+            padding: "14px 20px",
+            marginBottom: "28px",
           }}>
-            {orderId.substring(0, 8)}
-          </p>
+            {infoLine && (
+              <p style={{
+                fontSize: "13px",
+                fontFamily: "'DM Sans', sans-serif",
+                color: "#6B6360",
+                margin: "0",
+                fontWeight: 500,
+              }}>
+                {infoLine}
+              </p>
+            )}
+            {orderId && (
+              <p style={{
+                fontSize: "12px",
+                fontFamily: "'DM Sans', sans-serif",
+                color: "#B0A9A3",
+                margin: infoLine ? "4px 0 0" : "0",
+              }}>
+                Bestellung: {orderId.substring(0, 8)}
+              </p>
+            )}
+          </div>
         )}
 
         <a href="/" style={{

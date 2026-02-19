@@ -61,11 +61,17 @@ export default function StepSummary({ data, update, isSelf, currSymbol, region, 
       const res = await createCheckoutAPI({ ...data, _hp: undefined, region, previewLetter: previewText || null });
       if (res.url) {
         try {
+          const pkgNames = { trial: "Trial", impuls: "Impuls", classic: "Classic", journey: "Journey" };
+          const pkgCounts = { trial: 1, impuls: 5, classic: 10, journey: 15 };
+          const freqNames = { daily: "Täglich", every3: "Alle 3 Tage", weekly: "Wöchentlich" };
           localStorage.setItem("ll_success", JSON.stringify({
             name: data.nickname || data.recipientName,
             occasion: data.occasion,
-            letterCount: (data.package === "trial" ? 1 : data.package === "impuls" ? 5 : data.package === "classic" ? 10 : 15),
+            letterCount: pkgCounts[data.package] || 10,
             bookingType: data.bookingType,
+            packageName: pkgNames[data.package] || data.package,
+            frequency: freqNames[data.frequency] || data.frequency || "",
+            email: data.email || "",
           }));
         } catch (e) { /* localStorage not available */ }
         window.location.href = res.url;
