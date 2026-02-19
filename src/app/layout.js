@@ -1,8 +1,9 @@
 // src/app/layout.js
+import { Analytics } from "@vercel/analytics/react";
 export const metadata = {
   title: "LetterLift – Persönliche Briefserien, die berühren",
-  description: "Persönliche Briefserien für die Menschen, die dir am Herzen liegen. KI-unterstützt, von dir inspiriert. Als Geschenk oder für dich selbst. Ab CHF 34.90.",
-  keywords: ["Briefe verschenken", "persönliche Geschenkidee", "Briefserie", "emotionales Geschenk", "KI Briefe", "persönliche Briefe", "Geschenk Schweiz", "LetterLift"],
+  description: "Überrasche jemanden mit handgeschriebenen Briefen voller persönlicher Erinnerungen. KI-unterstützt, von dir inspiriert. Als Geschenk oder für dich selbst. Ab CHF 34.90.",
+  keywords: ["Briefe verschenken", "persönliche Geschenkidee", "Briefserie", "emotionales Geschenk", "KI Briefe", "handgeschriebene Briefe", "Geschenk Schweiz", "LetterLift"],
   authors: [{ name: "LetterLift" }],
   creator: "LetterLift",
   metadataBase: new URL("https://letterlift.ch"),
@@ -41,7 +42,7 @@ export default function RootLayout({ children }) {
     brand: { "@type": "Brand", name: "LetterLift" },
     offers: {
       "@type": "AggregateOffer",
-      lowPrice: "9.90",
+      lowPrice: "34.90",
       highPrice: "79.90",
       priceCurrency: "CHF",
       availability: "https://schema.org/InStock",
@@ -55,17 +56,8 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#3D5A4C" />
-        <script dangerouslySetInnerHTML={{ __html: `
-          window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
-          function loadGA(){if(window._gaLoaded)return;window._gaLoaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-M7ZK9G336X';document.head.appendChild(s);gtag('js',new Date());gtag('config','G-M7ZK9G336X');}
-          if(document.cookie.indexOf('ll_consent=1')!==-1)loadGA();
-        ` }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -73,19 +65,35 @@ export default function RootLayout({ children }) {
       </head>
       <body style={{ margin: 0, fontFamily: "'Lora', Georgia, serif" }}>
         {children}
+        <Analytics />
         <script dangerouslySetInnerHTML={{ __html: `
           (function(){
             if(document.cookie.indexOf('ll_consent=')!==-1)return;
+            var overlay=document.createElement('div');
+            overlay.id='ll-cookie-overlay';
+            overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:9998;backdrop-filter:blur(2px);';
             var b=document.createElement('div');
             b.id='ll-cookie';
-            b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#2D2926;color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;z-index:9999;font-family:DM Sans,sans-serif;font-size:13px;';
-            b.innerHTML='<span style="flex:1;min-width:200px;line-height:1.5;">Wir verwenden Cookies für die Analyse unserer Website. <a href="/datenschutz" style="color:#A8D5BA;text-decoration:underline;">Mehr erfahren</a></span><button onclick="llAccept()" style="background:#5B7B6A;color:#fff;border:none;border-radius:8px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;">Akzeptieren</button><button onclick="llDecline()" style="background:none;color:#999;border:1px solid #555;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;font-family:DM Sans,sans-serif;">Ablehnen</button>';
+            b.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);width:92%;max-width:520px;background:#fff;color:#2C2C2C;padding:28px 24px;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.18);z-index:9999;font-family:DM Sans,sans-serif;';
+            b.innerHTML=''
+              +'<div style="font-size:16px;font-weight:700;margin-bottom:8px;">Deine Privatsph\\u00e4re ist uns wichtig</div>'
+              +'<div style="font-size:14px;line-height:1.6;color:#6B6360;margin-bottom:20px;">'
+              +'Wir verwenden Cookies, um unsere Website zu verbessern und den Besuch f\\u00fcr dich angenehmer zu machen. '
+              +'<a href="/datenschutz" style="color:#3D5A4C;text-decoration:underline;">Mehr erfahren</a>'
+              +'</div>'
+              +'<div style="display:flex;gap:10px;flex-wrap:wrap;">'
+              +'<button onclick="llAccept()" style="flex:1;min-width:140px;background:linear-gradient(135deg,#3D5A4C,#5B7B6A);color:#fff;border:none;border-radius:10px;padding:13px 24px;font-size:15px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;">Akzeptieren</button>'
+              +'<button onclick="llDecline()" style="flex:1;min-width:140px;background:#F6F3EF;color:#6B6360;border:none;border-radius:10px;padding:13px 24px;font-size:14px;font-weight:500;cursor:pointer;font-family:DM Sans,sans-serif;">Nur notwendige</button>'
+              +'</div>';
+            document.body.appendChild(overlay);
             document.body.appendChild(b);
-            window.llAccept=function(){document.cookie='ll_consent=1;path=/;max-age=31536000;SameSite=Lax';loadGA();b.remove();};
-            window.llDecline=function(){document.cookie='ll_consent=0;path=/;max-age=31536000;SameSite=Lax';b.remove();};
+            function closeBanner(){b.remove();overlay.remove();}
+            window.llAccept=function(){document.cookie='ll_consent=1;path=/;max-age=31536000;SameSite=Lax';loadGA();closeBanner();};
+            window.llDecline=function(){document.cookie='ll_consent=0;path=/;max-age=31536000;SameSite=Lax';closeBanner();};
           })();
         ` }} />
       </body>
+
     </html>
   );
 }
