@@ -58,6 +58,11 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#3D5A4C" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+          function loadGA(){if(window._gaLoaded)return;window._gaLoaded=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-M7ZK9G336X';document.head.appendChild(s);gtag('js',new Date());gtag('config','G-M7ZK9G336X');}
+          if(document.cookie.indexOf('ll_consent=1')!==-1)loadGA();
+        ` }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
