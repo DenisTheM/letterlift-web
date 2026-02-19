@@ -3,14 +3,93 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState, useEffect } from "react";
 
+// ─── Kontextabhängige Texte ───
+function getMessage(occasion, isSelf, name, count, gender) {
+  // Pronoun helper
+  const sie = gender === "m" ? "er" : "sie";
+  const ihn = gender === "m" ? "ihn" : "sie";
+
+  const copy = {
+    tough_times: {
+      gift: `Irgendwann wird ${name} zum Briefkasten gehen und dort etwas finden, womit ${sie} nicht gerechnet hat. Kein Paket, keine Rechnung. Sondern jemand, der an ${ihn} denkt.`,
+      self: `Bald liegt der erste Brief in deinem Briefkasten. An einem ganz normalen Tag – vielleicht genau dem, an dem du ihn brauchst.`,
+    },
+    motivation: {
+      gift: `${count} Mal wird ${name} einen Umschlag öffnen und darin eine Stimme finden, die sagt: Ich sehe, was du tust. Und ich glaube an dich. Deine Stimme.`,
+      self: `An den Tagen, an denen du dich fragst wozu – wird ein Brief da sein. Geschrieben für genau diesen Moment.`,
+    },
+    confidence: {
+      gift: `${count} ${count === 1 ? "Brief" : "Briefe"}, die ${name} sagen, was ${sie} sich selbst nicht glaubt. Dass ${sie} genug ist. Dass ${sie} es kann. In deinen Worten.`,
+      self: `Briefe, die sagen, was du dir selbst zu selten sagst. Nicht als Floskel. Weil es stimmt.`,
+    },
+    appreciation: {
+      gift: `Es gibt Dinge, die sagt man zu selten. ${name} wird sie lesen. Schwarz auf weiss, in einem echten Brief. Von dir.`,
+      self: `Sich selbst zu schätzen ist nicht eitel. Es ist nötig. Diese Briefe erinnern dich daran.`,
+    },
+    celebration: {
+      gift: `Ein Moment verdient mehr als eine Nachricht auf dem Bildschirm. ${name} wird einen Brief in den Händen halten und wissen: Da hat jemand an mich gedacht.`,
+      self: `Bevor der Alltag diesen Moment leise werden lässt – hält ein Brief ihn fest. Für dich.`,
+    },
+    growth: {
+      gift: `${count} ${count === 1 ? "Brief" : "Briefe"}, verteilt über Wochen. Jeder einzelne ein leises Zeichen: Jemand sieht, wie du wächst. Jemand ist stolz.`,
+      self: `In ein paar Wochen wirst du auf diese Briefe zurückblicken und merken: Du warst schon auf dem richtigen Weg. Du wusstest es nur noch nicht.`,
+    },
+  };
+
+  const block = copy[occasion];
+  if (block) return isSelf ? block.self : block.gift;
+
+  // Fallback
+  return isSelf
+    ? `Bald liegt der erste Brief in deinem Briefkasten. Geschrieben für dich.`
+    : `${name} wird bald einen Brief in den Händen halten. Einen echten Brief. Von dir.`;
+}
+
 function SuccessContent() {
   const params = useSearchParams();
   const orderId = params.get("order");
+  const [data, setData] = useState(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setVisible(true), 100);
-  }, []);
+    if (!orderId) { setTimeout(() => setVisible(true), 100); return; }
+
+    const BASE = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+    const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+    const headers = { apikey: KEY, Authorization: `Bearer ${KEY}` };
+
+    Promise.all([
+      fetch(`${BASE}/rest/v1/orders?id=eq.${orderId}&select=booking_type,letter_count,package_name`, { headers }).then(r => r.json()),
+      fetch(`${BASE}/rest/v1/recipients?order_id=eq.${orderId}&select=nickname,recipient_name,gender`, { headers }).then(r => r.json()),
+      fetch(`${BASE}/rest/v1/onboarding_data?order_id=eq.${orderId}&select=occasion`, { headers }).then(r => r.json()),
+    ]).then(([orders, recipients, onboarding]) => {
+      const o = orders?.[0];
+      const r = recipients?.[0];
+      const ob = onboarding?.[0];
+      if (o && r) {
+        setData({
+          bookingType: o.booking_type,
+          letterCount: o.letter_count,
+          name: r.nickname || r.recipient_name,
+          gender: r.gender,
+          occasion: ob?.occasion,
+        });
+      }
+      setTimeout(() => setVisible(true), 100);
+    }).catch(() => setTimeout(() => setVisible(true), 100));
+  }, [orderId]);
+
+  const isSelf = data?.bookingType === "self";
+  const name = data?.name || "...";
+  const count = data?.letterCount || "?";
+
+  const headline = isSelf
+    ? `${count} ${count === 1 ? "Brief" : "Briefe"} an dich.`
+    : `${count} ${count === 1 ? "Brief" : "Briefe"} an ${name}.`;
+
+  const message = data
+    ? getMessage(data.occasion, isSelf, name, count, data.gender)
+    : "";
 
   return (
     <div style={{
@@ -22,7 +101,7 @@ function SuccessContent() {
       padding: "40px 20px",
     }}>
       <div style={{
-        maxWidth: "520px",
+        maxWidth: "480px",
         textAlign: "center",
         background: "#fff",
         borderRadius: "20px",
@@ -32,119 +111,92 @@ function SuccessContent() {
         transform: visible ? "translateY(0)" : "translateY(12px)",
         transition: "all 0.6s ease",
       }}>
-        {/* Animated heart */}
+        {/* Heart */}
         <div style={{
-          fontSize: "48px",
-          marginBottom: "24px",
-          animation: "pulse 2s ease-in-out infinite",
+          fontSize: "44px",
+          marginBottom: "28px",
+          animation: "pulse 2.5s ease-in-out infinite",
         }}>💛</div>
 
-        <h1 style={{
-          fontSize: "26px",
-          fontWeight: 400,
-          fontFamily: "'Lora', Georgia, serif",
-          margin: "0 0 16px",
-          color: "#2C2C2C",
-          lineHeight: 1.4,
-        }}>
-          Das ist etwas Besonderes.
-        </h1>
+        {/* Headline */}
+        {data && (
+          <p style={{
+            fontSize: "15px",
+            fontFamily: "'DM Sans', sans-serif",
+            color: "#5B7B6A",
+            fontWeight: 600,
+            letterSpacing: "0.02em",
+            margin: "0 0 20px",
+          }}>
+            {headline}
+          </p>
+        )}
 
-        <p style={{
-          fontSize: "16px",
-          fontFamily: "Georgia, serif",
-          color: "#4A4543",
-          lineHeight: 1.8,
-          margin: "0 0 12px",
-        }}>
-          Du hast gerade entschieden, jemandem mit Worten Kraft zu geben.
-        </p>
+        {/* Kontextabhängiger Text */}
+        {message && (
+          <p style={{
+            fontSize: "17px",
+            fontFamily: "Georgia, 'Lora', serif",
+            color: "#2D2926",
+            lineHeight: 1.8,
+            margin: "0 0 36px",
+            fontWeight: 400,
+          }}>
+            {message}
+          </p>
+        )}
 
-        <p style={{
-          fontSize: "15px",
-          fontFamily: "Georgia, serif",
-          color: "#6B6360",
-          lineHeight: 1.8,
-          margin: "0 0 32px",
-        }}>
-          Wir schreiben jetzt deine Briefe – jeden einzelnen mit Herz. 
-          Du bekommst eine E-Mail, sobald es losgeht.
-        </p>
-
-        {/* Subtle divider */}
+        {/* Divider */}
         <div style={{
-          width: "40px",
+          width: "36px",
           height: "2px",
           background: "linear-gradient(90deg, #5B7B6A, #A8D5BA)",
-          margin: "0 auto 32px",
+          margin: "0 auto 36px",
           borderRadius: "1px",
         }} />
 
-        <div style={{
-          background: "#F8F6F3",
-          borderRadius: "14px",
-          padding: "24px",
-          marginBottom: "28px",
-          textAlign: "left",
-        }}>
-          <p style={{
-            fontSize: "14px",
-            fontFamily: "'DM Sans', sans-serif",
-            color: "#3D5A4C",
-            lineHeight: 1.8,
-            margin: 0,
-          }}>
-            <strong>Was jetzt passiert:</strong><br/>
-            Deine Briefe werden geschrieben. Sobald der erste bereit ist, 
-            bekommst du eine E-Mail – dann kannst du ihn lesen, anpassen 
-            und freigeben. Erst nach deinem OK geht er raus.
-          </p>
-        </div>
-
+        {/* Nächster Schritt */}
         <p style={{
-          fontSize: "14px",
+          fontSize: "15px",
           fontFamily: "'DM Sans', sans-serif",
           color: "#8A8480",
           lineHeight: 1.6,
-          margin: "0 0 24px",
+          margin: "0 0 28px",
         }}>
-          Du behältst die volle Kontrolle.<br/>
-          Kein Brief wird ohne dein Wissen verschickt.
+          Wir schreiben jetzt deine Briefe.
         </p>
 
+        {/* Bestellnummer */}
         {orderId && (
           <p style={{
             fontSize: "12px",
             fontFamily: "'DM Sans', sans-serif",
             color: "#C5BFB9",
-            margin: "0 0 20px",
+            margin: "0 0 24px",
           }}>
-            Bestellnummer: {orderId.substring(0, 8)}
+            {orderId.substring(0, 8)}
           </p>
         )}
 
         <a href="/" style={{
           display: "inline-block",
-          padding: "14px 32px",
-          background: "transparent",
-          color: "#5B7B6A",
-          border: "1.5px solid #D6CFC8",
-          borderRadius: "12px",
+          padding: "12px 28px",
+          color: "#8A8480",
+          border: "1px solid #E0DAD4",
+          borderRadius: "10px",
           textDecoration: "none",
-          fontSize: "14px",
+          fontSize: "13px",
           fontFamily: "'DM Sans', sans-serif",
           fontWeight: 500,
-          transition: "all 0.2s",
         }}>
-          Zurück zur Startseite
+          Zur Startseite
         </a>
       </div>
 
-      {/* Pulse animation */}
       <style>{`
         @keyframes pulse {
           0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.08); }
+          50% { transform: scale(1.06); }
         }
       `}</style>
     </div>
@@ -161,7 +213,8 @@ export default function SuccessPage() {
         justifyContent: "center",
         background: "#FBF8F5",
         fontFamily: "'DM Sans', sans-serif",
-        color: "#B0A9A3",
+        color: "#C5BFB9",
+        fontSize: "14px",
       }}>
         Einen Moment...
       </div>
