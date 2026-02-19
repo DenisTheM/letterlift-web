@@ -4,14 +4,10 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useState, useEffect } from "react";
 
 // ─── Kontextabhängige Texte ───
-function getMessage(occasion, isSelf, name, count, gender) {
-  // Pronoun helper
-  const sie = gender === "m" ? "er" : "sie";
-  const ihn = gender === "m" ? "ihn" : "sie";
-
+function getMessage(occasion, isSelf, name, count) {
   const copy = {
     tough_times: {
-      gift: `Irgendwann wird ${name} zum Briefkasten gehen und dort etwas finden, womit ${sie} nicht gerechnet hat. Kein Paket, keine Rechnung. Sondern jemand, der an ${ihn} denkt.`,
+      gift: `Irgendwann wird ${name} zum Briefkasten gehen und dort etwas finden, womit niemand gerechnet hat. Kein Paket, keine Rechnung. Sondern jemand, der an ${name} denkt.`,
       self: `Bald liegt der erste Brief in deinem Briefkasten. An einem ganz normalen Tag – vielleicht genau dem, an dem du ihn brauchst.`,
     },
     motivation: {
@@ -19,7 +15,7 @@ function getMessage(occasion, isSelf, name, count, gender) {
       self: `An den Tagen, an denen du dich fragst wozu – wird ein Brief da sein. Geschrieben für genau diesen Moment.`,
     },
     confidence: {
-      gift: `${count} ${count === 1 ? "Brief" : "Briefe"}, die ${name} sagen, was ${sie} sich selbst nicht glaubt. Dass ${sie} genug ist. Dass ${sie} es kann. In deinen Worten.`,
+      gift: `${count} ${count === 1 ? "Brief" : "Briefe"}, die ${name} sagen, was man sich selbst so selten glaubt. Dass man genug ist. Dass man es kann. In deinen Worten.`,
       self: `Briefe, die sagen, was du dir selbst zu selten sagst. Nicht als Floskel. Weil es stimmt.`,
     },
     appreciation: {
@@ -39,7 +35,6 @@ function getMessage(occasion, isSelf, name, count, gender) {
   const block = copy[occasion];
   if (block) return isSelf ? block.self : block.gift;
 
-  // Fallback
   return isSelf
     ? `Bald liegt der erste Brief in deinem Briefkasten. Geschrieben für dich.`
     : `${name} wird bald einen Brief in den Händen halten. Einen echten Brief. Von dir.`;
@@ -52,43 +47,29 @@ function SuccessContent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!orderId) { setTimeout(() => setVisible(true), 100); return; }
-
-    const BASE = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-    const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-    const headers = { apikey: KEY, Authorization: `Bearer ${KEY}` };
-
-    Promise.all([
-      fetch(`${BASE}/rest/v1/orders?id=eq.${orderId}&select=booking_type,letter_count,package_name`, { headers }).then(r => r.json()),
-      fetch(`${BASE}/rest/v1/recipients?order_id=eq.${orderId}&select=nickname,recipient_name,gender`, { headers }).then(r => r.json()),
-      fetch(`${BASE}/rest/v1/onboarding_data?order_id=eq.${orderId}&select=occasion`, { headers }).then(r => r.json()),
-    ]).then(([orders, recipients, onboarding]) => {
-      const o = orders?.[0];
-      const r = recipients?.[0];
-      const ob = onboarding?.[0];
-      if (o && r) {
-        setData({
-          bookingType: o.booking_type,
-          letterCount: o.letter_count,
-          name: r.nickname || r.recipient_name,
-          gender: r.gender,
-          occasion: ob?.occasion,
-        });
+    // Lese Daten aus sessionStorage (gespeichert vor Stripe-Redirect)
+    try {
+      const raw = sessionStorage.getItem("ll_success");
+      if (raw) {
+        setData(JSON.parse(raw));
+        sessionStorage.removeItem("ll_success"); // Einmal lesen, dann löschen
       }
-      setTimeout(() => setVisible(true), 100);
-    }).catch(() => setTimeout(() => setVisible(true), 100));
-  }, [orderId]);
+    } catch (e) { /* nicht verfügbar */ }
+    setTimeout(() => setVisible(true), 100);
+  }, []);
 
   const isSelf = data?.bookingType === "self";
-  const name = data?.name || "...";
-  const count = data?.letterCount || "?";
+  const name = data?.name || "";
+  const count = data?.letterCount || "";
 
-  const headline = isSelf
-    ? `${count} ${count === 1 ? "Brief" : "Briefe"} an dich.`
-    : `${count} ${count === 1 ? "Brief" : "Briefe"} an ${name}.`;
+  const headline = data
+    ? isSelf
+      ? `${count} ${count === 1 ? "Brief" : "Briefe"} an dich.`
+      : `${count} ${count === 1 ? "Brief" : "Briefe"} an ${name}.`
+    : "";
 
   const message = data
-    ? getMessage(data.occasion, isSelf, name, count, data.gender)
+    ? getMessage(data.occasion, isSelf, name, count)
     : "";
 
   return (
@@ -119,7 +100,7 @@ function SuccessContent() {
         }}>💛</div>
 
         {/* Headline */}
-        {data && (
+        {headline && (
           <p style={{
             fontSize: "15px",
             fontFamily: "'DM Sans', sans-serif",
