@@ -1,7 +1,7 @@
 // src/lib/formState.js
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
 // Initialer State, Update-Logik, localStorage-Persistenz
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
 
 const STORAGE_KEY = "letterlift_draft";
 const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 Stunden
@@ -38,7 +38,6 @@ export const INITIAL_FORM_DATA = {
   package: null,
   frequency: "weekly",
   paperOption: "standard",
-  handschriftEdition: false,
   street: "",
   zip: "",
   city: "",
@@ -47,7 +46,7 @@ export const INITIAL_FORM_DATA = {
   _hp: "",
 };
 
-// ——— Sanitize: XSS-Schutz für Strings ———
+// ─── Sanitize: XSS-Schutz für Strings ───
 
 const MAX_FIELD_LENGTH = 2000;
 
@@ -76,7 +75,7 @@ export function sanitizeAll(data) {
   return clean;
 }
 
-// ——— localStorage Persistenz ———
+// ─── localStorage Persistenz ───
 
 /** Gespeicherten Draft laden (falls vorhanden + nicht abgelaufen) */
 export function loadDraft() {
@@ -137,12 +136,8 @@ export function createUpdater(setData) {
 }
 
 /** Gesamtpreis berechnen */
-export function calculateTotal(data, packages) {
+export function calculateTotal(data, packages, paperOptions) {
   const pkg = packages.find(p => p.id === data.package);
-  let total = pkg?.price || 0;
-  // Premium-Design: +9.90
-  if (data.paperOption === "premium_design") total += 9.9;
-  // Handschrift-Edition: +9.90
-  if (data.handschriftEdition) total += 9.9;
-  return total;
+  const paper = paperOptions.find(p => p.id === data.paperOption);
+  return (pkg?.price || 0) + (paper?.price || 0);
 }

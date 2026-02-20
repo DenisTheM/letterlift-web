@@ -1,7 +1,7 @@
 // src/components/steps/StepSummary.jsx
 "use client";
 import { useState } from "react";
-import { PACKAGES, FREQUENCIES, OCCASIONS, STYLES, PERSONAS } from "../../data/constants";
+import { PACKAGES, PAPER_OPTIONS, FREQUENCIES, OCCASIONS, STYLES, PERSONAS } from "../../data/constants";
 import { preCheckoutSafetyCheck } from "../../lib/safety";
 import { checkCheckoutLimit, createBotDetector } from "../../lib/rateLimit";
 import { createCheckoutAPI } from "../../lib/api";
@@ -18,14 +18,9 @@ export default function StepSummary({ data, update, isSelf, currSymbol, region, 
   const oc = OCCASIONS.find(o => o.id === data.occasion);
   const st = Array.isArray(data.style) ? data.style.map(s => STYLES.find(x => x.id === s)?.label).join(", ") : "";
   const fr = FREQUENCIES.find(f => f.id === data.frequency);
+  const pa = PAPER_OPTIONS.find(q => q.id === data.paperOption);
   const pe = isSelf ? PERSONAS.find(q => q.id === data.persona) : null;
-  const total = calculateTotal(data, PACKAGES);
-
-  // Upgrades label
-  const upgrades = [];
-  if (data.paperOption === "premium_design") upgrades.push("Premium-Design");
-  if (data.handschriftEdition) upgrades.push("Handschrift-Edition");
-  const upgradesLabel = upgrades.length > 0 ? upgrades.join(" + ") : "Keine";
+  const total = calculateTotal(data, PACKAGES, PAPER_OPTIONS);
 
   const rows = [
     ["Typ", isSelf ? "Für mich selbst" : "Geschenk"],
@@ -37,7 +32,7 @@ export default function StepSummary({ data, update, isSelf, currSymbol, region, 
     ["Stil", st || "–"],
     ["Paket", pk ? (pk.id === "trial" ? "Trial · 1 Brief" : pk.name + " · " + pk.letters + " Briefe") : "–"],
     ...(isTrial ? [] : [["Frequenz", fr?.label || "–"]]),
-    ["Upgrades", upgradesLabel],
+    ["Papier", pa?.label || "Standard"],
     ["Adresse", data.street + ", " + data.zip + " " + data.city],
   ];
 
@@ -64,7 +59,23 @@ export default function StepSummary({ data, update, isSelf, currSymbol, region, 
     setErrorMsg(""); setLoading(true);
     try {
       const res = await createCheckoutAPI({ ...data, _hp: undefined, region, previewLetter: previewText || null });
-      if (res.url) window.location.href = res.url;
+      if (res.url) {
+        try {
+          const pkgNames = { trial: "Trial", impuls: "Impuls", classic: "Classic", journey: "Journey" };
+          const pkgCounts = { trial: 1, impuls: 5, classic: 10, journey: 15 };
+          const freqNames = { daily: "Täglich", every3: "Alle 3 Tage", weekly: "Wöchentlich" };
+          localStorage.setItem("ll_success", JSON.stringify({
+            name: data.nickname || data.recipientName,
+            occasion: data.occasion,
+            letterCount: pkgCounts[data.package] || 10,
+            bookingType: data.bookingType,
+            packageName: pkgNames[data.package] || data.package,
+            frequency: freqNames[data.frequency] || data.frequency || "",
+            email: data.email || "",
+          }));
+        } catch (e) { /* localStorage not available */ }
+        window.location.href = res.url;
+      }
       else { setErrorMsg("Fehler beim Erstellen der Bestellung. Bitte versuche es erneut."); setLoading(false); }
     } catch (err) {
       setErrorMsg("Verbindungsfehler: " + err.message); setLoading(false);
@@ -98,16 +109,10 @@ export default function StepSummary({ data, update, isSelf, currSymbol, region, 
           <span style={{ fontSize: "13px", fontFamily: fonts.sans, color: colors.textMuted }}>{pk?.name}</span>
           <span style={{ fontSize: "13px", fontFamily: fonts.sans }}>{cs}{pk?.price.toFixed(2)}</span>
         </div>
-        {data.paperOption === "premium_design" && (
+        {pa?.price > 0 && (
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-            <span style={{ fontSize: "13px", fontFamily: fonts.sans, color: colors.textMuted }}>Premium-Design</span>
-            <span style={{ fontSize: "13px", fontFamily: fonts.sans }}>{cs}9.90</span>
-          </div>
-        )}
-        {data.handschriftEdition && (
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-            <span style={{ fontSize: "13px", fontFamily: fonts.sans, color: colors.textMuted }}>Handschrift-Edition</span>
-            <span style={{ fontSize: "13px", fontFamily: fonts.sans }}>{cs}9.90</span>
+            <span style={{ fontSize: "13px", fontFamily: fonts.sans, color: colors.textMuted }}>{pa.label}</span>
+            <span style={{ fontSize: "13px", fontFamily: fonts.sans }}>{cs}{pa.price.toFixed(2)}</span>
           </div>
         )}
         <div style={{ borderTop: `1px solid ${colors.borderLight}`, paddingTop: "8px", marginTop: "4px", display: "flex", justifyContent: "space-between" }}>

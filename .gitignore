@@ -6,3 +6,6 @@ supabase/.env
 *.log
 .vercel
 .env*.local
+
+# Lokale Backups
+Sicherungen/

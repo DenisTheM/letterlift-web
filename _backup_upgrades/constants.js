@@ -1,8 +1,8 @@
 // src/data/constants.js
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
 // Alle Auswahl-Daten an einem Ort
 // Neue Anlässe, Pakete, Stile etc. → hier hinzufügen
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
 
 export const OCCASIONS = [
   { id: "tough_times", emoji: "🌧️", label: "Durch schwere Zeiten", desc: "Trennung, Trauer, Krankheit" },
@@ -28,7 +28,7 @@ export const STYLES = [
   { id: "poetic",     emoji: "✨", label: "Reflektierend & poetisch", desc: "Nachdenklich, bildreich" },
   { id: "humorous",   emoji: "😄", label: "Humorvoll & leicht",      desc: "Lustig mit Tiefe" },
   { id: "wise",       emoji: "🌿", label: "Weise & gelassen",        desc: "Wie ein Mentor" },
-  { id: "custom",     emoji: "✍️", label: "Eigener Stil",             desc: "Beschreibe den Ton" },
+  { id: "custom",     emoji: "✏️", label: "Eigener Stil",             desc: "Beschreibe den Ton" },
 ];
 
 export const PACKAGES = [
@@ -45,9 +45,9 @@ export const FREQUENCIES = [
 ];
 
 export const PAPER_OPTIONS = [
-  { id: "standard",       label: "Standard",           desc: "Sauberes Layout, Standardpapier",                    price: 0,    icon: "📄" },
-  { id: "premium_design", label: "Premium-Design",     desc: "Elegantes Brief-Layout mit Designelementen",         price: 9.9,  icon: "🎨" },
-  { id: "handwritten",    label: "Handschrift-Edition", desc: "Persönlicher Handschrift-Font statt Druckschrift",  price: 9.9,  icon: "✒️" },
+  { id: "standard",    label: "Standard",           desc: "120g-Papier, weisses Kuvert",             price: 0,    icon: "📄" },
+  { id: "premium",     label: "Premium-Papier",     desc: "200g, crèmefarbenes Kuvert",              price: 9.9,  icon: "📜" },
+  { id: "handwritten", label: "Handschrift-Edition", desc: "Premium-Papier + Handschrift-Font",      price: 19.9, icon: "✒️" },
 ];
 
 export const RELATIONSHIPS = [

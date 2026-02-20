@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Name des Jobs -->
+    <key>Label</key>
+    <string>ch.letterlift.backup</string>
+
+    <!-- Welches Script ausführen -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/denisscheller/Projekte/letterlift-web/backup-letterlift.sh</string>
+    </array>
+
+    <!-- Täglich um 22:00 Uhr -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>22</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <!-- Log-Ausgabe -->
+    <key>StandardOutPath</key>
+    <string>/tmp/letterlift-backup.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/letterlift-backup-error.log</string>
+
+    <!-- Verpasste Ausführung nachholen (z.B. nach Ruhezustand) -->
+    <key>StartInterval</key>
+    <integer>86400</integer>
+</dict>
+</plist>

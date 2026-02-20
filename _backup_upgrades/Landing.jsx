@@ -155,8 +155,8 @@ export default function Landing({ onStart, currSymbol }) {
           <p style={{ fontSize: "14px", fontFamily: fonts.sans, fontWeight: 600, color: colors.text, textAlign: "center", margin: "0 0 16px" }}>Mach es besonders – Premium-Upgrades</p>
           <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
             {[
-              { icon: "🎨", name: "Premium-Design", desc: "Elegantes Brief-Layout mit Designelementen", price: "+" + cs + "9.90" },
-              { icon: "✒️", name: "Handschrift-Edition", desc: "Persönlicher Handschrift-Font statt Druckschrift", price: "+" + cs + "9.90" },
+              { icon: "📜", name: "Premium-Papier", desc: "Schweres, hochwertiges Premiumpapier", price: "+" + cs + "9.90" },
+              { icon: "✒️", name: "Handschrift-Edition", desc: "Premium-Papier + eleganter Handschrift-Font", price: "+" + cs + "19.90" },
               { icon: "📸", name: "Foto-Edition", desc: "Deine Fotos passend in die Briefe integriert", price: "+" + cs + "19.90", soon: true },
             ].map((u, i) => (
               <div key={i} style={{ background: "#fff", border: `1.5px solid ${colors.borderLight}`, borderRadius: "14px", padding: "18px 22px", display: "flex", alignItems: "center", gap: "14px", minWidth: "220px", flex: "1", maxWidth: "360px", opacity: u.soon ? 0.7 : 1 }}>

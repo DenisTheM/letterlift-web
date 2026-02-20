@@ -48,6 +48,31 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
 
 // ─── 1. Bestellbestätigung ───
 export function orderConfirmationEmail(order: any, recipientName: string): { subject: string; html: string } {
+  const isSelf = order.booking_type === "self";
+
+  if (isSelf) {
+    return {
+      subject: `💛 Deine Briefe an dich entstehen gerade`,
+      html: wrapHtml(`
+        <h1 style="font-size:22px;font-weight:400;color:#2D2926;margin:0 0 16px;line-height:1.4;">
+          Das ist etwas Besonderes.
+        </h1>
+        <p style="font-size:15px;color:#4A4543;line-height:1.8;margin:0 0 20px;">
+          Du hast dir selbst etwas geschenkt – Worte, die dich begleiten. ${order.letter_count} persönliche Briefe, geschrieben für dich.
+        </p>
+        <div style="background:#F0F7F2;border-radius:12px;padding:24px;margin-bottom:24px;">
+          <p style="font-size:14px;color:#3D5A4C;margin:0;font-family:sans-serif;line-height:1.8;">
+            <strong>Was jetzt passiert:</strong><br/>
+            Wir schreiben deine Briefe. Der erste landet bald in deinem Briefkasten – ohne Vorwarnung, genau dann, wenn du ihn am wenigsten erwartest und am meisten brauchst.
+          </p>
+        </div>
+        <p style="font-size:13px;color:#B0A9A3;margin:24px 0 0;font-family:sans-serif;">
+          Bestellnummer: ${order.id.substring(0, 8)} · ${order.package_name}-Paket
+        </p>`),
+    };
+  }
+
+  // Gift booking
   return {
     subject: `💛 Deine Briefe an ${recipientName} entstehen gerade`,
     html: wrapHtml(`
@@ -55,7 +80,7 @@ export function orderConfirmationEmail(order: any, recipientName: string): { sub
         Das ist etwas Besonderes.
       </h1>
       <p style="font-size:15px;color:#4A4543;line-height:1.8;margin:0 0 20px;">
-        Du hast gerade entschieden, jemandem mit Worten Kraft zu geben – und das ist mehr, als die meisten Menschen tun. ${order.letter_count} persönliche Briefe an ${recipientName}. Jeder einzelne mit Herz geschrieben.
+        Du hast gerade entschieden, jemandem mit Worten Kraft zu geben. ${order.letter_count} persönliche Briefe an ${recipientName}. Jeder einzelne mit Herz geschrieben.
       </p>
       <p style="font-size:15px;color:#4A4543;line-height:1.8;margin:0 0 24px;">
         Wir machen uns jetzt an die Arbeit. Deine Angaben sind bei uns – und wir nehmen sie ernst.
@@ -74,7 +99,6 @@ export function orderConfirmationEmail(order: any, recipientName: string): { sub
       </p>`),
   };
 }
-
 // ─── 2. Auto-Freigabe-Info ───
 export function autoApproveEmail(order: any, letterIndex: number, recipientName: string): { subject: string; html: string } {
   const reviewUrl = `https://letterlift.ch/review/${order.review_token}`;

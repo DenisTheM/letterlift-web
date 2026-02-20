@@ -68,20 +68,6 @@ function triggerNext(orderId: string, nextIndex: number) {
 
 // triggerNotify removed: cron-notify handles scheduled review notifications
 
-// ─── Admin Alert (fire-and-forget) ───
-function alertAdmin(type: string, orderId: string, letterIndex?: number, reason?: string) {
-  const url = `${Deno.env.get("SUPABASE_URL")}/functions/v1/notify-admin`;
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
-      "apikey": Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    },
-    body: JSON.stringify({ type, orderId, letterIndex, reason }),
-  }).catch(err => console.error("[Admin Alert] Failed:", err.message));
-}
-
 // ─── Build datapoint usage tracker from previous letters ───
 function buildDatapointTracker(previousLetters: { body: string }[], onboarding: any): string {
   if (!previousLetters.length) return "";
@@ -618,7 +604,6 @@ serve(async (req) => {
           status: "blocked",
           admin_notes: `Safety-Block: ${inputCheck.flags.join("; ")}`,
         }).eq("id", orderId);
-        alertAdmin("letter_blocked", orderId, 1, `Input Safety-Block: ${inputCheck.flags.join("; ")}`);
         return new Response(JSON.stringify({ 
           error: "Safety-Check fehlgeschlagen", 
           flags: inputCheck.flags,
@@ -813,7 +798,6 @@ serve(async (req) => {
             status: "needs_review",
             admin_notes: `Brief ${targetIndex} safety-blocked: ${safeResult.flags.join("; ")}`,
           }).eq("id", orderId);
-          alertAdmin("letter_blocked", orderId, targetIndex, `Safety 3x fehlgeschlagen: ${safeResult.flags.join("; ")}`);
           return new Response(JSON.stringify({ error: "Safety-Check fehlgeschlagen", letter: targetIndex, flags: safeResult.flags }), {
             status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
@@ -923,9 +907,6 @@ SCHREIBE EINEN MINIMALEN, SICHEREN BRIEF:
       }).eq("id", orderId);
 
       console.log(`[Complete] Order ${orderId}: ${order.letter_count} letters, review=${needsReview}`);
-      if (needsReview) {
-        alertAdmin("order_needs_review", orderId, undefined, `${lowQ.length} Brief(e) mit Score < 75: ${lowQ.map(l => `Brief ${l.letter_index} (${l.quality_score})`).join(", ")}`);
-      }
     }
 
     return new Response(JSON.stringify({ success: true, letter: targetIndex, qc: qcResult?.score }), {
@@ -934,7 +915,6 @@ SCHREIBE EINEN MINIMALEN, SICHEREN BRIEF:
 
   } catch (err) {
     console.error("[Engine Error]", err);
-    try { alertAdmin("generation_failed", orderId, targetIndex, err.message); } catch(_) {}
     return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
