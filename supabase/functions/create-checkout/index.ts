@@ -62,6 +62,7 @@ serve(async (req) => {
     const { error: recipErr } = await supabase.from("recipients").insert({
       order_id: order.id,
       recipient_name: orderData.recipientName,
+      recipient_last_name: orderData.recipientLastName || "",
       nickname: orderData.nickname || null,
       relationship: orderData.relationship || null,
       street: orderData.street,

@@ -22,6 +22,13 @@ export default function StepRecipient({ data, update, isSelf, trackInteraction }
             onFocus={onFocusInput} onBlur={onBlurInput} />
         </div>
         <div>
+          <label style={labelStyle}>Nachname <span style={optionalHint}>für Postversand</span></label>
+          <input style={inputStyle} placeholder={isSelf ? "Dein Nachname" : "z.B. Müller"}
+            value={data.recipientLastName || ""}
+            onChange={e => { update("recipientLastName", e.target.value); }}
+            onFocus={onFocusInput} onBlur={onBlurInput} />
+        </div>
+        <div>
           <label style={labelStyle}>
             Geschlecht <span style={{ fontSize: "11px", color: "#B0A9A3", fontWeight: 400 }}>(für korrekte Ansprache)</span>
           </label>

@@ -8,6 +8,21 @@ const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPAB
 const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
 const AUTO_APPROVE_HOURS = 24;
 
+// ——— Trigger send-letter (fire-and-forget) ———
+function triggerSend(orderId: string, letterIndex: number) {
+  const sendUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-letter`;
+  fetch(sendUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      "apikey": Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    },
+    body: JSON.stringify({ orderId, letterIndex }),
+  }).then(r => console.log(`[Send] Triggered send-letter ${letterIndex}: ${r.status}`))
+    .catch(e => console.error(`[Send] Failed to trigger send-letter ${letterIndex}:`, e));
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   try {
@@ -34,6 +49,8 @@ serve(async (req) => {
       if (!updateError) {
         approved++;
         console.log(`[Auto-Approve] Letter ${l.letter_index} order ${l.order_id}`);
+        // Trigger physical send
+        triggerSend(l.order_id, l.letter_index);
         // Send notification (non-blocking)
         try {
           const { data: order } = await supabase.from("orders").select("buyer_email, package_name, letter_count, review_token").eq("id", l.order_id).single();

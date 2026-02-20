@@ -756,6 +756,7 @@ serve(async (req) => {
           status: "approved", approved_at: new Date().toISOString(), token_count_input: 0, token_count_output: 0, cost_chf: 0,
         }).eq("order_id", orderId).eq("letter_index", 1).eq("status", "generating");
         console.log(`[Done] Letter 1 (preview, QC=${previewQC.score}, auto-approved)`);
+        triggerSend(orderId, 1);
         if (order.letter_count > 1) triggerNext(orderId, 2);
         return new Response(JSON.stringify({ success: true, letter: 1, preview: true, qc: previewQC.score }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }

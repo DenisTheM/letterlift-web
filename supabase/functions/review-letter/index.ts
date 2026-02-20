@@ -57,6 +57,21 @@ async function scheduleNextLetter(orderId: string, currentIndex: number, totalLe
   }
 }
 
+// ——— Trigger send-letter (fire-and-forget) ———
+function triggerSend(orderId: string, letterIndex: number) {
+  const sendUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-letter`;
+  fetch(sendUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      "apikey": Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    },
+    body: JSON.stringify({ orderId, letterIndex }),
+  }).then(r => console.log(`[Send] Triggered send-letter ${letterIndex}: ${r.status}`))
+    .catch(e => console.error(`[Send] Failed to trigger send-letter ${letterIndex}:`, e));
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -125,6 +140,9 @@ serve(async (req) => {
       
       console.log(`[Review] Letter ${letterId} approved (index ${letter?.letter_index})`);
 
+      // Trigger physical send
+      if (letter) triggerSend(order.id, letter.letter_index);
+
       // Trigger notify for next letter
       if (letter) await scheduleNextLetter(order.id, letter.letter_index, order.letter_count, order.frequency || "every3");
 
@@ -154,6 +172,9 @@ serve(async (req) => {
       }).eq("id", letterId).eq("order_id", order.id);
       
       console.log(`[Review] Letter ${letterId} edited + approved (index ${letter?.letter_index})`);
+
+      // Trigger physical send
+      if (letter) triggerSend(order.id, letter.letter_index);
 
       // Trigger notify for next letter
       if (letter) await scheduleNextLetter(order.id, letter.letter_index, order.letter_count, order.frequency || "every3");

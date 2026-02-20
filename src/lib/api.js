@@ -27,7 +27,7 @@ async function callEdgeFunction(name, body) {
 /** Nur erlaubte Felder an die API senden */
 function preparePayload(data) {
   const ALLOWED_KEYS = [
-    "bookingType", "recipientName", "nickname", "gender", "relationship",
+    "bookingType", "recipientName", "recipientLastName", "nickname", "gender", "relationship",
     "relationshipCustom", "language", "occasion", "contextText", "goal",
     "hobbies", "humor", "strengths", "importantPeople", "noGo",
     "memories", "mem1", "mem2", "mem3", "memExtra",

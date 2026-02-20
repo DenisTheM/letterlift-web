@@ -9,6 +9,7 @@ const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 Stunden
 export const INITIAL_FORM_DATA = {
   bookingType: null,
   recipientName: "",
+  recipientLastName: "",
   nickname: "",
   gender: "",
   relationship: "",
