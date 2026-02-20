@@ -68,6 +68,21 @@ function triggerNext(orderId: string, nextIndex: number) {
 
 // triggerNotify removed: cron-notify handles scheduled review notifications
 
+// --- Trigger send-letter (fire-and-forget) ---
+function triggerSend(orderId: string, letterIndex: number) {
+  const sendUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-letter`;
+  fetch(sendUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      "apikey": Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    },
+    body: JSON.stringify({ orderId, letterIndex }),
+  }).then(r => console.log(`[Send] Triggered send-letter ${letterIndex}: ${r.status}`))
+    .catch(e => console.error(`[Send] Failed to trigger send-letter ${letterIndex}:`, e));
+}
+
 // ─── Admin Alert (fire-and-forget) ───
 function alertAdmin(type: string, orderId: string, letterIndex?: number, reason?: string) {
   const url = `${Deno.env.get("SUPABASE_URL")}/functions/v1/notify-admin`;
