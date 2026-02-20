@@ -16,6 +16,9 @@ export default function LetterLift() {
 
   const handleStart = (type) => {
     setBookingType(type);
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "onboarding_start", { booking_type: type });
+    }
     setView("onboarding");
   };
 

@@ -63,6 +63,7 @@ export default function StepSummary({ data, update, isSelf, currSymbol, region, 
 
     setErrorMsg(""); setLoading(true);
     try {
+      if (typeof window !== "undefined" && window.gtag) window.gtag("event", "begin_checkout", { package_name: data.package, paper: data.paperOption });
       const res = await createCheckoutAPI({ ...data, _hp: undefined, region, previewLetter: previewText || null });
       if (res.url) window.location.href = res.url;
       else { setErrorMsg("Fehler beim Erstellen der Bestellung. Bitte versuche es erneut."); setLoading(false); }

@@ -28,6 +28,7 @@ export default function StepPreview({ data, isSelf, previewText, setPreviewText,
     }
     setRateLimitMsg("");
     setLoading(true);
+    if (typeof window !== "undefined" && window.gtag) window.gtag("event", "preview_generated", { booking_type: data.bookingType });
     fetchAIPreviewAPI(data)
       .then(res => setPreviewText(res.preview || fallbackPreview))
       .catch(() => setPreviewText(fallbackPreview))
