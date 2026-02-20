@@ -895,6 +895,7 @@ SCHREIBE EINEN MINIMALEN, SICHEREN BRIEF:
         quality_notes: (qcResult?.notes ? qcResult.notes + " | " : "") + `Auto-approved: ${reason}`,
       }).eq("order_id", orderId).eq("letter_index", targetIndex);
       console.log(`[Auto-Approve] Brief ${targetIndex} auto-approved (${reason})`);
+      triggerSend(orderId, targetIndex);
     }
 
     // ═══ Schedule review notification (nur Gift-Bookings) ═══
